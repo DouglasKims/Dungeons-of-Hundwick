@@ -140,7 +140,7 @@ init 3 python:
     def usetp(char,tp):
         if char.tp < tp:
             cancast = False
-            logText ("Insufficient TP for {char.name} to use this skill.")
+            logText (f"Insufficient TP for {char.name} to use this skill.")
         else:
             char.tp -= tp
             cancast = True
@@ -391,7 +391,7 @@ init 3 python:
         # LCK to evade spell
         sd100 = random.randint(1,100)
         
-        spelldamage = round(spelldamage * (math.sqrt(char.tec)/10+1))
+        # spelldamage = round(spelldamage * (math.sqrt(char.tec)/10+1))
         
 
         if sd100 <= math.sqrt(starget.lck)/100:
@@ -889,8 +889,8 @@ init 3 python:
             # if char.hp > round(char.maxhp*0.20) and usetp(char,char.slist[charcommand][2]) == True:
             if usetp(char,char.slist[charcommand][2]) == True:
                 
-                atkmin = math.ceil(char.slist["sneak"][0]/2)
-                atkmax = math.floor(char.slist["sneak"][0]/2) + 3
+                atkmin = math.ceil(char.slist["cleave"][0]/2)
+                atkmax = math.floor(char.slist["cleave"][0]/2) + 3
                 attacktimes = random.randint(atkmin, atkmax)
                 # char.hp -= round(char.maxhp*0.20) # No more HP cost
                 # char.tp -= 3

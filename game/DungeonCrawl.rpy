@@ -163,8 +163,8 @@ init 5 python:
         
         update_time()    
         update_laid()
-        # if restAreaCheck() == False:
-        #     update_danger()
+        if restAreaCheck() == False:
+            update_danger()
 
     # FIX
     def update_laid():
