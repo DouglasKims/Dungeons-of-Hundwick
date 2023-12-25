@@ -57,27 +57,48 @@ init 3 python:
     def rolldamage(char):
         global atk_report
         rolleddamage = 0
-        for _ in range(int(char.str)):
-            if char.dmg == 1:
-                rolleddamage += random.randint(1,4) # 1d4 / AVG 2,5
-            elif char.dmg == 2:
-                rolleddamage += random.randint(1,6) # 1d6 / AVG 3,5
-            elif char.dmg == 3:
-                rolleddamage += random.randint(1,8) # 1d8 / AVG 4,5
-            elif char.dmg == 4:
-                rolleddamage += random.randint(2,12) # 2d6 / AVG 7
-            elif char.dmg == 5:
-                rolleddamage += random.randint(2,16) # 2d8 / AVG 9
-            elif char.dmg == 6:
-                rolleddamage += random.randint(2,20) # 2d10 / AVG 11
-            elif char.dmg == 7:
-                rolleddamage += random.randint(3,24) # 3d8 / AVG 13,5
-            elif char.dmg == 8:
-                rolleddamage += random.randint(3,30) # 3d10 / AVG 16,5
-            elif char.dmg == 9:
-                rolleddamage += random.randint(3,36) # 3d12 / AVG 19,5
-            elif char.dmg >= 10:
-                rolleddamage += random.randint(4,40) # 4d10 / AVG 22
+        # for _ in range(int(char.str)):
+        #     if char.dmg == 1:
+        #         rolleddamage += random.randint(1,4) # 1d4 / AVG 2,5
+        #     elif char.dmg == 2:
+        #         rolleddamage += random.randint(1,6) # 1d6 / AVG 3,5
+        #     elif char.dmg == 3:
+        #         rolleddamage += random.randint(1,8) # 1d8 / AVG 4,5
+        #     elif char.dmg == 4:
+        #         rolleddamage += random.randint(2,12) # 2d6 / AVG 7
+        #     elif char.dmg == 5:
+        #         rolleddamage += random.randint(2,16) # 2d8 / AVG 9
+        #     elif char.dmg == 6:
+        #         rolleddamage += random.randint(2,20) # 2d10 / AVG 11
+        #     elif char.dmg == 7:
+        #         rolleddamage += random.randint(3,24) # 3d8 / AVG 13,5
+        #     elif char.dmg == 8:
+        #         rolleddamage += random.randint(3,30) # 3d10 / AVG 16,5
+        #     elif char.dmg == 9:
+        #         rolleddamage += random.randint(3,36) # 3d12 / AVG 19,5
+        #     elif char.dmg >= 10:
+        #         rolleddamage += random.randint(4,40) # 4d10 / AVG 22
+
+        if char.dmg <= 1:
+            rolleddamage = char.str * 2.5 # 1d4 / AVG 2,5
+        elif char.dmg <= 2:
+            rolleddamage = char.str * 3.5  # 1d6 / AVG 3,5
+        elif char.dmg <= 3:
+            rolleddamage = char.str * 4.5  # 1d8 / AVG 4,5
+        elif char.dmg <= 4:
+            rolleddamage = char.str * 7  # 2d6 / AVG 7
+        elif char.dmg <= 5:
+            rolleddamage = char.str * 9  # 2d8 / AVG 9
+        elif char.dmg <= 6:
+            rolleddamage = char.str * 11  # 2d10 / AVG 11
+        elif char.dmg <= 7:
+            rolleddamage = char.str * 13.5  # 3d8 / AVG 13,5
+        elif char.dmg <= 8:
+            rolleddamage = char.str * 16.5  # 3d10 / AVG 16,5
+        elif char.dmg <= 9:
+            rolleddamage = char.str * 9.5  # 3d12 / AVG 19,5
+        elif char.dmg >= 10:
+            rolleddamage = char.str * 22  # 4d10 / AVG 22
 
 
         rolleddamage = rolleddamage
@@ -146,7 +167,7 @@ init 3 python:
             cancast = True
         return cancast
 
-    def calcspelldamage(char,spelllevel):
+    def calcspelldamageOLD(char,spelllevel):
         global spelldamage
         spelldamage = 0
         if spelllevel == "weak":
@@ -159,14 +180,42 @@ init 3 python:
             for _ in range(int(char.tec)):
                 spelldamage += random.randint(6,12) # 6d2 / AVG 9
 
+    def calcspelldamage(char, skill):
+        global spelldamage
+        spelldamage = 0
+
+        if char in opposition: # char is enemy
+            skilllevel = char.level
+            if char.level <= 10:
+                spelldamage = 35 + ( skilllevel * 5 )
+
+            elif char.level <= 20:
+                spelldamage = 90 + ( ( skilllevel - 10) * 10 )
+
+            elif char.level > 20:
+                spelldamage = 140 + ( (skilllevel - 20) * 15 )
+
+        else: # Char is player
+            skilllevel = char.slist[skill][0]
+
+            if "mor" in skill:
+                spelldamage = 90 + ( skilllevel * 10 )
+
+            elif "matha" in skill:
+                spelldamage = 140 + ( skilllevel * 15 )
+
+            else:
+                spelldamage = 35 + ( skilllevel * 5 )
+
     def calcspellheal(char,spelllevel):
         spellheal = 0
         if spelllevel == "weak":
-            spellheal = 25 * (math.sqrt(int(char.tec))/10+1)
+            # spellheal = 25 * (math.sqrt(int(char.tec))/10+1)
+            spellheal = 30 + ( char.tec * 2)
         elif spelllevel == "medium":
-            spellheal = 50 * (math.sqrt(int(char.tec))/10+1)
+            spellheal = 60 * ( char.tec * 3)
         elif spelllevel == "heavy":
-            spellheal = 100
+            spellheal = 100 * ( char.tec * 4)
 
         return spellheal
 
@@ -328,9 +377,11 @@ init 3 python:
 
     def healally(char, n, heal):
         if n.hp > 0:
-            n.hp += round((n.maxhp*heal/100))
+            # n.hp += round((n.maxhp*heal/100))
+            n.hp += round(heal)
 
-            logText (f"{n.name} has been healed for {round(n.maxhp*heal/100)}")
+            # logText (f"{n.name} has been healed for {round(n.maxhp*heal/100)}")
+            logText (f"{n.name} has been healed for {round(heal)}")
 
             if n.hp > n.maxhp:
                 n.hp = n.maxhp
@@ -390,8 +441,6 @@ init 3 python:
 
         # LCK to evade spell
         sd100 = random.randint(1,100)
-        
-        # spelldamage = round(spelldamage * (math.sqrt(char.tec)/10+1))
         
 
         if sd100 <= math.sqrt(starget.lck)/100:
@@ -486,7 +535,7 @@ init 3 python:
 
         for n in party:
             if n.hp >0:
-                n.exp += combat_exp
+                n.exp += int(combat_exp)
         
         party_money += combat_money
 
@@ -498,7 +547,9 @@ init 3 python:
             if n.char_class == "Decoy":
                 party.remove(n)
 
-            n.effects.clear()
+            # n.effects.clear()
+            while len(n.effects) > 0:
+                tickEffect(n)
 
     ## initiative system
     initiative = []
@@ -512,10 +563,10 @@ init 3 python:
         initdict = {}
 
         for n in party:
-            initroll = random.randint(1,10)+n.agi
+            initroll = random.randint(1,10) + int(math.sqrt(n.agi))
             initdict.update({n: initroll})
         for n in opposition:
-            initroll = random.randint(1,10)+n.agi
+            initroll = random.randint(1,10) + int(math.sqrt(n.agi))
             initdict.update({n: initroll})
 
 
@@ -556,11 +607,14 @@ init 3 python:
 
             # Level adequate enemies
             levelmodifier = random.choice([0.5,1,2,3,4])
-            enemygrouplevel = int(partyLevel() * levelmodifier)
+            # enemygrouplevel = int(partyLevel()) #* levelmodifier)
+            enemygrouplevel = dungeon_level * 3.5
+
 
             while enemygrouplevel > 0:
 
-                randomenemylevel = partyLevel() + random.randint(-2,2) -1 
+                # randomenemylevel = partyLevel() + random.randint(-2,2) -1 # Enemy lvl based on party
+                randomenemylevel = dungeon_level + random.randint (-1,1) # Enemy lvl based on Dungeon Floor
                 if randomenemylevel < 0:
                     randomenemylevel = 0
 
@@ -628,17 +682,15 @@ init 3 python:
             elemweight = 0
         
 
-        choice = random.choices(enemychoices, weights=[physweight,elemweight,elemweight/2], k=1)[0]
+        choice = random.choices(enemychoices, weights=[physweight,elemweight,elemweight/3], k=1)[0]
 
         if choice == "phys":
             attackfunc(enemy,enemytarget)
 
         elif choice == "elem":
-            if enemy.level < 6:
-                spelllevel = "weak"
+            if enemy.level < 11:
                 enemy.tp -= 4
-            elif enemy.level < 12 :
-                spelllevel = "medium"
+            elif enemy.level < 21 :
                 enemy.tp -= 7
             
 
@@ -652,16 +704,14 @@ init 3 python:
                     while dmgtype in enemy.weak or dmgtype == None:
                         dmgtype = elem[random.randint(1,6)]
 
-                calcspelldamage(enemy,spelllevel)
+                calcspelldamage(enemy, None)
                 usespell(enemy,enemytarget,dmgtype,"single")
 
         elif choice == "aoeelem":
         
-            if enemy.level < 6:
-                spelllevel = "weak"
+            if enemy.level < 11:
                 enemy.tp -= 10
-            elif enemy.level < 12 :
-                spelllevel = "medium"
+            elif enemy.level < 21 :
                 enemy.tp -= 16
 
             if enemy.tp < 0:
@@ -675,7 +725,7 @@ init 3 python:
                         dmgtype = elem[random.randint(1,6)]
                     
 
-                calcspelldamage(enemy,spelllevel)
+                calcspelldamage(enemy, None)
                 usespell(enemy,enemytarget,dmgtype,"multi")
 
         
@@ -685,7 +735,8 @@ init 3 python:
 # RENPY COMMANDS
 
     def escapeCommand(char):
-        chance = 30 + char.agi
+        # chance = 30 + char.agi
+        chance = 95
         escaped100 = random.randint(1,100)
 
         if escaped100 <= chance:
@@ -723,7 +774,7 @@ init 3 python:
             if "mor" in spell and spell in char.slist:
                 if "grun" in spell and spell in char.slist:
                     if usetp(char,char.slist[spell][2]) == True:
-                        calcspelldamage(char,"medium")
+                        calcspelldamage(char, spell)
                         usespell(char,target,dmgtype,"multi")
 
                         char.acted = True
@@ -732,7 +783,7 @@ init 3 python:
                 elif spell in char.slist:
                     if usetp(char,char.slist[spell][2]) == True:
                         if target is not None:
-                            calcspelldamage(char,"medium")
+                            calcspelldamage(char, spell)
                             usespell(char,target,dmgtype,"single")
 
                             char.acted = True
@@ -743,7 +794,7 @@ init 3 python:
             elif "matha" in spell and spell in char.slist:
                 if "grun" in spell and "grun" in char.slist:
                     if usetp(char,char.slist[spell][2]) == True:
-                        calcspelldamage(char,"heavy")
+                        calcspelldamage(char, spell)
                         usespell(char,target,dmgtype,"multi")
 
                         char.acted = True
@@ -753,7 +804,7 @@ init 3 python:
                 elif spell in char.slist:
                     if usetp(char,char.slist[spell][2]) == True:
                         if target is not None:
-                            calcspelldamage(char,"heavy")
+                            calcspelldamage(char, spell)
                             usespell(char,target,dmgtype,"single")
 
                             char.acted = True
@@ -761,7 +812,7 @@ init 3 python:
             elif "mor" not in spell and "matha" not in spell and "cura" not in spell:
                 if "grun" in spell and spell in char.slist:
                     if usetp(char,char.slist[spell][2]) == True:
-                        calcspelldamage(char,"weak")
+                        calcspelldamage(char, spell)
                         usespell(char,target,dmgtype,"multi")
 
                         char.acted = True
@@ -770,7 +821,7 @@ init 3 python:
                 elif spell in char.slist:
                     if usetp(char,char.slist[spell][2]) == True:
                         if target is not None:
-                            calcspelldamage(char,"weak")
+                            calcspelldamage(char, spell)
                             usespell(char,target,dmgtype,"single")
 
                             char.acted = True
@@ -950,7 +1001,7 @@ init 3 python:
                     if enemy.hp <= 0:
                             defeatedopp.append(enemy)
 
-                for n in defeatedopp:
+                for enemy in defeatedopp:
                     logText (f"{char.name} defeated {enemy.name}!")
                     opposition.remove(enemy)
                     opptoremove.append(enemy)
@@ -1035,7 +1086,7 @@ init 3 python:
             if usetp(char,char.slist[charcommand][2]) == True:
 
                 target.exp += 0.25 * char.slist["appraise"][0]
-
+                logText(f"{char.name} has appraised {target.name}'s potential.")
                 char.acted = True
 
 

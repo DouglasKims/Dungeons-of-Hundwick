@@ -84,21 +84,20 @@ init 5 python:
         [1, 1,1,1,1,1, 1,1,1,1,1, 1,1,1,1,1, 1,1,1,1,1, 1,1,1,1,1, 1,1,1,1,1, 1]
     ]#   0  1 2 3 4 5  6 7 8 9 10 1 2 3 4 5  6 7 8 9 20 1 2 3 4 5  6 7 8 9 30 1
 
-
     dungeon11loot = {
         "1,6": (item1, 1,6),
         "2,8": (item1 ,2,8),
         "13,2": (item2 ,13,2),
-        "26,4": (armor2 ,26,4),
+        "26,4": (armor3 ,26,4),
         "14,9": (armor2 ,14,9),
-        "28,8": (weapon2 ,28,8),
-        "14,14": (item3 ,14,14),
+        "28,8": (weapon3 ,28,8),
+        "14,14": (item5 ,14,14),
         "20,14": (chr1 ,20,14),
         "11,16": (item1 ,11,16),
         "12,15": (item2 ,12,15),
         "13,16": (item2 ,13,16),
         "7,19": (item1 ,7,19),
-        "12,28": (weapon1 ,12,28),
+        "12,28": (weapon4 ,12,28),
         "16,26": (item2 ,16,26),
         "17,26": (item3 ,17,26),
         "18,26": (item1 ,18,26),
@@ -120,37 +119,24 @@ init 5 python:
     dungeon11_rest = [
         lambda y, x: 8 <= y <= 10 and 12 <= x <= 14,
         lambda y, x: 17 <= y <= 19 and 18 <= x <= 20,
+        lambda y, x: 1 <= y <= 3 and 1 <= x <= 3,
     ]
 
 
-    # ERASE / SIMPLIFY
-
-    # def buildDungeon(dungeon_bp,level,lootlist):
-    #     global dungeon_blueprint
-    #     global dungeon_level
-    #     global dungeon_current_loot
-
-    #     dungeon_level = level
-    #     dungeon_current_loot = lootlist
-    #     dungeon_blueprint = dungeon_bp
-
-    # dungeon_current = buildDungeon(testdungeon, 1)
     dungeon_current_loot = None
-    # dungeon_current = buildDungeon(dungeon11, 1, dungeon11loot)
     dungeon_current = dungeon11
     dungeon_current_loot = dungeon11loot
 
     party = party
-    # party_coord = [1,1]
     party_facing = 2
     danger = 0
     danger_level = ""
     dungeon_level = 1
-    # check = dungeon_blueprint[party_coord[0]][party_coord[1]]
     vision = None
-    hour_names = [f"Dawn",f"Morning",f"Noon",f"Afternoon",f"Twilight",f"Evening",f"Midnight",f"Witching Hour"]
+    # hour_names = [f"Dawn",f"Morning",f"Noon",f"Afternoon",f"Twilight",f"Evening",f"Midnight",f"Witching Hour"]
     # Dark between time = 4*90 and time = 7*90 // Each 90 steps advances the clock
-    hour = 2
+    hour_name = "Morning"
+    hour = 9
     steps = 0
 
     #Game Logic
@@ -162,49 +148,49 @@ init 5 python:
         check = dungeon_blueprint[party_coord[0]][party_coord[1]]
         
         update_time()    
-        update_laid()
+        # update_laid()
         if restAreaCheck() == False:
             update_danger()
 
     # FIX
-    def update_laid():
+    # def update_laid():
 
-        for n in dungeon_bosses:
-            # Get new position
-            n["step"] += 1
-            if n["step"] == len(n)-1:
-                n["step"] = 0
+    #     for n in dungeon_bosses:
+    #         # Get new position
+    #         n["step"] += 1
+    #         if n["step"] == len(n)-1:
+    #             n["step"] = 0
 
-            step_n = n["step"]
-            step_prev = step_n-1
+    #         step_n = n["step"]
+    #         step_prev = step_n-1
             
-            if step_prev < 0:
-                step_prev = len(n)-2
+    #         if step_prev < 0:
+    #             step_prev = len(n)-2
 
-            ly = n[step_n][0]
-            lx = n[step_n][1]
-            ly_prev = n[step_prev][0]
-            lx_prev = n[step_prev][1]
+    #         ly = n[step_n][0]
+    #         lx = n[step_n][1]
+    #         ly_prev = n[step_prev][0]
+    #         lx_prev = n[step_prev][1]
 
-            # Clears previous position
-            dungeon_blueprint[ly_prev][lx_prev] = 0
+    #         # Clears previous position
+    #         dungeon_blueprint[ly_prev][lx_prev] = 0
 
 
-            if n[step_n][2] is not None:
-                if n[step_n][2] == 8:
-                    dungeon_blueprint[ly][lx] = f"{RED}▲{RESET}"
+    #         if n[step_n][2] is not None:
+    #             if n[step_n][2] == 8:
+    #                 dungeon_blueprint[ly][lx] = f"{RED}▲{RESET}"
 
-                elif n[step_n][2] == 2:
-                    dungeon_blueprint[ly][lx] = f"{RED}▼{RESET}"
+    #             elif n[step_n][2] == 2:
+    #                 dungeon_blueprint[ly][lx] = f"{RED}▼{RESET}"
 
-                elif n[step_n][2] == 4:
-                    dungeon_blueprint[ly][lx] = f"{RED}◄{RESET}"
+    #             elif n[step_n][2] == 4:
+    #                 dungeon_blueprint[ly][lx] = f"{RED}◄{RESET}"
                 
-                elif n[step_n][2] == 6:
-                    dungeon_blueprint[ly][lx] = f"{RED}►{RESET}"
+    #             elif n[step_n][2] == 6:
+    #                 dungeon_blueprint[ly][lx] = f"{RED}►{RESET}"
 
-                # add to "local map"
-                    # make local map be shared between party and boss
+    #             # add to "local map"
+    #                 # make local map be shared between party and boss
 
     def checkHour(int):
         global hour
@@ -217,20 +203,43 @@ init 5 python:
     def update_time():
         global steps
         global hour
+        global hour_name
 
         steps += 1
 
-        if steps >= 90:
+        if steps >= 30:
             hour += 1
             steps = 0
 
-        if hour >= 8:
+        if hour >= 24:
             hour = 0
 
-        if hour >= 4:
+        if hour >= 18 or hour <= 5:
             switchTime(False)
         else:
             switchTime(True)
+
+        update_hourname()
+
+    def update_hourname():
+        global hour_name
+        if hour != None: # Hour names
+            if hour >= 0 and hour <=2:
+                hour_name = "Midnight"
+            if hour >= 3 and hour <= 5:
+                hour_name = "Witching Hour"
+            if hour >= 6 and hour <= 8:
+                hour_name = "Dawn"
+            if hour >= 9 and hour <= 11:
+                hour_name = "Morning"
+            if hour >= 12 and hour <= 14:
+                hour_name = "Noon"
+            if hour >= 15 and hour <= 17:
+                hour_name = "Afternoon"
+            if hour >= 18 and hour <= 20:
+                hour_name = "Twilight"
+            if hour >= 21 and hour <= 23:
+                hour_name = "Evening"
 
 
 
@@ -253,22 +262,11 @@ init 5 python:
 
         danger += random.randint(1,6)
 
-        if danger > 85:
-            danger_level = f"{BG_RED}{WHITE}Red{RESET}"
-        elif danger >50:
-            danger_level = f"{YELLOW}Yellow{RESET}"
-        elif danger > 25:
-            danger_level = f"{GREEN}Green{RESET}"
-        else:
-            danger_level = f"None"
-
         if danger >= 100:
                 logText("Enemies have appeared!")
                 danger = 0
                 renpy.call("combat_label")
                 danger_level = f"None"
-                # runCombat()
-                # steps += rounds
 
     view_distance = 2
     localmap = []
@@ -281,7 +279,7 @@ init 5 python:
         map_coords = {}
         
 
-        if hour >= 4:
+        if hour >= 18 or hour <=5:
             view_distance = 1
         else:
             view_distance = 2
@@ -334,6 +332,21 @@ init 5 python:
             "SE" : (dungeon_blueprint[party_coord[0]+1][party_coord[1]+1], view_distance+1, view_distance+1)
         }
 
+        if view_distance != None: # Check surrounding tiles as seen
+            dungeon_playermap[party_coord[0]-1][party_coord[1]-1] = dungeon_blueprint[party_coord[0]-1][party_coord[1]-1]
+            dungeon_playermap[party_coord[0]-1][party_coord[1]] = dungeon_blueprint[party_coord[0]-1][party_coord[1]]
+            dungeon_playermap[party_coord[0]-1][party_coord[1]+1] = dungeon_blueprint[party_coord[0]-1][party_coord[1]+1]
+
+            dungeon_playermap[party_coord[0]][party_coord[1]-1] = dungeon_blueprint[party_coord[0]][party_coord[1]-1]
+            dungeon_playermap[party_coord[0]][party_coord[1]] = dungeon_blueprint[party_coord[0]][party_coord[1]]
+            dungeon_playermap[party_coord[0]][party_coord[1]+1] = dungeon_blueprint[party_coord[0]][party_coord[1]+1]
+
+            dungeon_playermap[party_coord[0]+1][party_coord[1]-1] = dungeon_blueprint[party_coord[0]+1][party_coord[1]-1]
+            dungeon_playermap[party_coord[0]+1][party_coord[1]] = dungeon_blueprint[party_coord[0]+1][party_coord[1]]
+            dungeon_playermap[party_coord[0]+1][party_coord[1]+1] = dungeon_blueprint[party_coord[0]+1][party_coord[1]+1]
+
+            
+
         if view_distance > 1: #Check visibility // If tile is blocked, conceal tiles behind it.
             
             if map_coords_check["NW"][0] in (1, 9, N, S, E, W, 2, 3, U, D, 8, 6, None, "SO","NO","EO","WO"):
@@ -341,6 +354,9 @@ init 5 python:
                 map_coords["0,1"]=(None, view_distance-2, view_distance-1)
                 map_coords["1,0"]=(None, view_distance-1, view_distance-2)
             else: #Toggle SEEN for NW tiles
+                dungeon_playermap[party_coord[0]-2][party_coord[1]-2] = dungeon_blueprint[party_coord[0]-2][party_coord[1]-2]
+                dungeon_playermap[party_coord[0]-2][party_coord[1]-1] = dungeon_blueprint[party_coord[0]-2][party_coord[1]-1]
+                dungeon_playermap[party_coord[0]-1][party_coord[1]-2] = dungeon_blueprint[party_coord[0]-1][party_coord[1]-2]
                 pass
 
             if map_coords_check["NE"][0] in (1, 9, N, S, E, W, 2, 3, U, D, 8, 6, None, "SO","NO","EO","WO"):
@@ -348,6 +364,9 @@ init 5 python:
                 map_coords["0,4"]=(None, view_distance-2, view_distance+2)
                 map_coords["1,4"]=(None, view_distance-1, view_distance+2)
             else:
+                dungeon_playermap[party_coord[0]-2][party_coord[1]+1] = dungeon_blueprint[party_coord[0]-2][party_coord[1]+1]
+                dungeon_playermap[party_coord[0]-2][party_coord[1]+2] = dungeon_blueprint[party_coord[0]-2][party_coord[1]+2]
+                dungeon_playermap[party_coord[0]-1][party_coord[1]+2] = dungeon_blueprint[party_coord[0]-1][party_coord[1]+2]
                 pass
             
             if map_coords_check["SW"][0] in (1, 9, N, S, E, W, 2, 3, U, D, 8, 6, None, "SO","NO","EO","WO"):
@@ -355,6 +374,9 @@ init 5 python:
                 map_coords["4,0"]=(None, view_distance+2, view_distance-2)
                 map_coords["4,1"]=(None, view_distance+2, view_distance-1)
             else:
+                dungeon_playermap[party_coord[0]+1][party_coord[1]-2] = dungeon_blueprint[party_coord[0]+1][party_coord[1]-2]
+                dungeon_playermap[party_coord[0]+2][party_coord[1]-2] = dungeon_blueprint[party_coord[0]+2][party_coord[1]-2]
+                dungeon_playermap[party_coord[0]+2][party_coord[1]-1] = dungeon_blueprint[party_coord[0]+2][party_coord[1]-1]
                 pass
             
             if map_coords_check["SE"][0] in (1, 9, N, S, E, W, 2, 3, U, D, 8, 6, None, "SO","NO","EO","WO"):
@@ -362,40 +384,53 @@ init 5 python:
                 map_coords["3,4"]=(None, view_distance+1, view_distance+2)
                 map_coords["4,3"]=(None, view_distance+2, view_distance+1)
             else:
+                dungeon_playermap[party_coord[0]+2][party_coord[1]+2] = dungeon_blueprint[party_coord[0]+2][party_coord[1]+2]
+                dungeon_playermap[party_coord[0]+1][party_coord[1]+2] = dungeon_blueprint[party_coord[0]+1][party_coord[1]+2]
+                dungeon_playermap[party_coord[0]+2][party_coord[1]+1] = dungeon_blueprint[party_coord[0]+2][party_coord[1]+1]
                 pass
 
             if map_coords_check["N"][0] in (1, 9, N, S, E, W, 2, 3, U, D, 8, 6, None, "SO","NO","EO","WO"):
                 map_coords["0,2"]=(None, view_distance-2, view_distance)
             else:
+                dungeon_playermap[party_coord[0]-2][party_coord[1]] = dungeon_blueprint[party_coord[0]-2][party_coord[1]]
                 pass
 
             if map_coords_check["W"][0] in (1, 9, N, S, E, W, 2, 3, U, D, 8, 6, None, "SO","NO","EO","WO"):
                 map_coords["2,0"]=(None, view_distance, view_distance-2)
             else:
+                dungeon_playermap[party_coord[0]][party_coord[1]-2] = dungeon_blueprint[party_coord[0]][party_coord[1]-2]
                 pass
 
             if map_coords_check["E"][0] in (1, 9, N, S, E, W, 2, 3, U, D, 8, 6, None, "SO","NO","EO","WO"):
                 map_coords["2,4"]=(None, view_distance, view_distance+2)
             else:
+                dungeon_playermap[party_coord[0]][party_coord[1]+2] = dungeon_blueprint[party_coord[0]][party_coord[1]+2]
                 pass
 
             if map_coords_check["S"][0] in (1, 9, N, S, E, W, 2, 3, U, D, 8, 6, None, "SO","NO","EO","WO"):
                 map_coords["4,2"]=(None, view_distance+2, view_distance)
             else:
+                dungeon_playermap[party_coord[0]+2][party_coord[1]] = dungeon_blueprint[party_coord[0]+2][party_coord[1]]
                 pass
 
         if party_facing is not None: # Print Party Facing to middle of @localmap
             if party_facing == 8:
                 localmap[view_distance][view_distance] = "▲"
+                # dungeon_playermap[party_coord[0]][party_coord[1]] = "▲"
 
             elif party_facing == 2:
                 localmap[view_distance][view_distance] = "▼"
+                # dungeon_playermap[party_coord[0]][party_coord[1]] = "▼"
 
             elif party_facing == 4:
                 localmap[view_distance][view_distance] = "◄"
+                # dungeon_playermap[party_coord[0]][party_coord[1]] = "◄"
             
             elif party_facing == 6:
                 localmap[view_distance][view_distance] = "►"
+                # dungeon_playermap[party_coord[0]][party_coord[1]] = "►"
+
+            
         
         for key, values in map_coords.items():
             t, y, x = values
@@ -639,7 +674,7 @@ init 5 python:
         if lootcoord in dungeon_current_loot:
             lootitem = dungeon_current_loot[lootcoord][0]
 
-            if lootitem.type == "Weapon" or lootitem.type == "Armor" or lootitem.type == "Accessory":
+            if lootitem.type == "Weapon" or lootitem.type == "Armor" or lootitem.type == "Accessory" or lootitem.type == "Charm":
                 if len(inventory) >20:
                     logText(f"Found a {lootitem.name}, but the party's stash is full.")
                 else:
@@ -735,6 +770,16 @@ init 5 python:
 
 ## RENPY FUNCTIONS
 
+    def genDGPlayerMap(dungeon):
+        dgplayermap = []
+
+        for ny in range(len(dungeon)):
+            dgplayermap.append([])
+            for nx in range(len(dungeon[ny])):
+                dgplayermap[ny].append("")
+
+        return dgplayermap
+
     def turnLeft():
         global party_facing
 
@@ -797,11 +842,11 @@ init 5 python:
 
             if tileface == 0:
                 update_coord(dx,dy)
-            elif tileface in [f"{RED}▲{RESET}",f"{RED}▼{RESET}",f"{RED}◄{RESET}",f"{RED}►{RESET}"]:
-                logText("You walk into a Làidir!")
-                bossbattle = True
-                runCombat()
-                update_coord(dx,dy)
+            # elif tileface in [f"{RED}▲{RESET}",f"{RED}▼{RESET}",f"{RED}◄{RESET}",f"{RED}►{RESET}"]:
+            #     logText("You walk into a Làidir!")
+            #     bossbattle = True
+            #     runCombat()
+            #     update_coord(dx,dy)
             elif tileface == 1:
                 logText ("You bonk against a wall.")
             elif tileface == 2:
@@ -846,16 +891,16 @@ default dungeon11loot = {
         "1,6": (item1, 1,6),
         "2,8": (item1 ,2,8),
         "13,2": (item2 ,13,2),
-        "26,4": (armor2 ,26,4),
-        "14,9": (armor2 ,14,9),
-        "28,8": (weapon2 ,28,8),
-        "14,14": (item3 ,14,14),
+        "26,4": (armor3 ,26,4),
+        "15,9": (chr2 ,15,9),
+        "28,8": (weapon3 ,28,8),
+        "14,14": (item5 ,14,14),
         "20,14": (chr1 ,20,14),
         "11,16": (item1 ,11,16),
         "12,15": (item2 ,12,15),
         "13,16": (item2 ,13,16),
         "7,19": (item1 ,7,19),
-        "12,28": (weapon1 ,12,28),
+        "12,28": (weapon4 ,12,28),
         "16,26": (item2 ,16,26),
         "17,26": (item3 ,17,26),
         "18,26": (item1 ,18,26),
@@ -906,5 +951,7 @@ default dungeon11 = [
     ]#   0  1 2 3 4 5  6 7 8 9 10 1 2 3 4 5  6 7 8 9 20 1 2 3 4 5  6 7 8 9 30 1
 default dungeon_current = dungeon11
 default dungeon_current_loot = dungeon11loot
+default dungeon_playermap = genDGPlayerMap(dungeon11)
+
 
 ###

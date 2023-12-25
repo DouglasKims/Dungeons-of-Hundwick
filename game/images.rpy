@@ -11,23 +11,23 @@ transform scenerydark:
     easein 2.0 xpos -500
 
 image bg Town:
-    "BG/Hundwick.png"
+    "BG/Hundwick.webp"
     zoom 1.20
 
 image bg Tavern:
-    "BG/Tavern.png"
+    "BG/Tavern.webp"
     zoom 1.20
 
 image bg Shop:
-    "BG/Shop.png"
+    "BG/Shop.webp"
     zoom 1.20
 
 image bg Arena:
-    "BG/Arena.png"
+    "BG/Arena.webp"
     zoom 1.20
 
 image bg Dungeon:
-    "BG/Dungeon.png"
+    "BG/Dungeon.webp"
     zoom 1.20
 
 init python:
@@ -37,122 +37,133 @@ init python:
 # DUNGEON TILES
 
 image dgfloor:
-    "Map/Floor.png"
+    "Map/Floor.webp"
     zoom 0.5
 image dgwall:
-    "Map/Wall.png"
+    "Map/Wall.webp"
     zoom 0.5
 image dgchesto:
-    "Map/ChestO.png"
+    "Map/ChestO.webp"
     zoom 0.5
 image dgchestc:
-    "Map/ChestC.png"
+    "Map/ChestC.webp"
     zoom 0.5
 image dgdoor:
-    "Map/Door.png"
+    "Map/Door.webp"
     zoom 0.5
 image dgstairsu:
-    "Map/StairsU.png"
+    "Map/StairsU.webp"
     zoom 0.5
 image dgstairsd:
-    "Map/StairsD.png"
+    "Map/StairsD.webp"
     zoom 0.5
 image dgpassw:
-    "Map/PassW.png"
+    "Map/PassW.webp"
     zoom 0.5
 image dgpasse:
-    "Map/PassE.png"
+    "Map/PassE.webp"
     zoom 0.5
 image dgpassn:
-    "Map/PassN.png"
+    "Map/PassN.webp"
     zoom 0.5
 image dgpasss:
-    "Map/PassS.png"
+    "Map/PassS.webp"
     zoom 0.5
 image dgpassns:
-    "Map/PassNS.png"
+    "Map/PassNS.webp"
     zoom 0.5
 image dgpasswe:
-    "Map/PassWE.png"
+    "Map/PassWE.webp"
+    zoom 0.5
+image dgpasssecret:
+    "Map/PassSecret.webp"
     zoom 0.5
 image dgmerch:
-    "Map/Merch.png"
+    "Map/Merch.webp"
     zoom 0.5
 
 image partyN:
-    "Map/PartyN.png"
+    "Map/PartyN.webp"
     zoom 0.5
 
 image partyS:
-    "Map/PartyS.png"
+    "Map/PartyS.webp"
     zoom 0.5
 
 image partyW:
-    "Map/PartyW.png"
+    "Map/PartyW.webp"
     zoom 0.5
 
 image partyE:
-    "Map/PartyE.png"
+    "Map/PartyE.webp"
     zoom 0.5
 
 image dgdark:
-    "Map/Dark.png"
+    "Map/Dark.webp"
     zoom 0.5
 
+image buttonmapidle:
+    "Map/Btnmapidle.webp"
+    zoom 0.7
+
+image buttonmaphover:
+    "Map/Btnmaphover.webp"
+    zoom 0.7
+
 image buttonhandidle:
-    "Map/BtnHand_hover.png"
+    "Map/BtnHand_hover.webp"
     zoom 0.7
 image buttonhandhover:
-    "Map/BtnHand_selected.png"
+    "Map/BtnHand_selected.webp"
     zoom 0.7
 
 image buttonpartyidle:
-    "Map/Party_idle.png"
+    "Map/Party_idle.webp"
     zoom 0.7
 image buttonpartyhover:
-    "Map/Party_hover.png"
+    "Map/Party_hover.webp"
     zoom 0.7
 
 image buttonforwidle:
-    "Map/BtnU_hover.png"
+    "Map/BtnU_hover.webp"
     zoom 0.7
 image buttonforwhover:
-    "Map/BtnU_selected.png"
+    "Map/BtnU_selected.webp"
     zoom 0.7
 
 image buttonbackidle:
-    "Map/BtnU_hover.png"
+    "Map/BtnU_hover.webp"
     zoom 0.7 yzoom -1
 image buttonbackhover:
-    "Map/BtnU_selected.png"
+    "Map/BtnU_selected.webp"
     zoom 0.7 yzoom -1
 
 image buttonleftidle:
-    "Map/BtnR_hover.png"
+    "Map/BtnR_hover.webp"
     zoom 0.7 xzoom -1
 image buttonlefthover:
-    "Map/BtnR_selected.png"
+    "Map/BtnR_selected.webp"
     zoom 0.7 xzoom -1
 
 image buttonrightidle:
-    "Map/BtnR_hover.png"
+    "Map/BtnR_hover.webp"
     zoom 0.7
 image buttonrighthover:
-    "Map/BtnR_selected.png"
+    "Map/BtnR_selected.webp"
     zoom 0.7
 
 image buttonturncwidle:
-    "Map/BtnTCW_hover.png"
+    "Map/BtnTCW_hover.webp"
     zoom 0.7
 image buttonturncwhover:
-    "Map/BtnTCW_selected.png"
+    "Map/BtnTCW_selected.webp"
     zoom 0.7
 
 image buttonturnccwidle:
-    "Map/BtnTCW_hover.png"
+    "Map/BtnTCW_hover.webp"
     zoom 0.7
     xzoom -1
 image buttonturnccwhover:
-    "Map/BtnTCW_selected.png"
+    "Map/BtnTCW_selected.webp"
     zoom 0.7
     xzoom -1

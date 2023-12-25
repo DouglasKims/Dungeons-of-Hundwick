@@ -16,14 +16,14 @@ init python:
             for n in party:
                 n.hp = n.maxhp
                 n.tp = n.maxtp
-            hour += 2
+            timeskip = hour + 8
 
-            if hour == 8:
-                hour = 0
-            elif hour == 9:
-                hour = 1
-            elif hour == 10:
-                hour = 2
+            if timeskip <= 23:
+                hour = timeskip
+            elif timeskip >= 24:
+                timeskip -= 24
+                hour = timeskip
+            update_hourname()
 
             return True
         else:

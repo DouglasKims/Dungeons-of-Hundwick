@@ -19,6 +19,81 @@ init python:
     yadjValue = float("inf")
     yadj = ui.adjustment()
 
+    mapplacement = ""
+    
+
+    def blankNewMap():
+        # global newdungeon
+        blankdungeon = []
+
+        for ny in range(32):
+            blankdungeon.append([])
+            for nx in range(32):
+                blankdungeon[ny].append(1)
+            
+        return blankdungeon
+
+    def toggleMapTileOLD(tiley, tilex):
+        global newdungeon
+
+        if newdungeon[tiley][tilex] != 0:
+            newdungeon[tiley][tilex] = 0
+        elif newdungeon[tiley][tilex] != 1:
+            newdungeon[tiley][tilex] = 1
+
+    def toggleMapTileAlt(tiley, tilex):
+        global newdungeon
+
+        if newdungeon[tiley][tilex] != 2:
+            newdungeon[tiley][tilex] = 2
+        elif newdungeon[tiley][tilex] != C:
+            newdungeon[tiley][tilex] = C
+
+    def toggleMapTile(tiley, tilex):
+        global newdungeon
+
+        if mapplacement == "Wall":
+            newdungeon[tiley][tilex] = 1
+        elif mapplacement == "Floor":
+            newdungeon[tiley][tilex] = 0
+        elif mapplacement == "Door":
+            newdungeon[tiley][tilex] = 2
+        
+        elif mapplacement == "Secret Passage E > W":
+            newdungeon[tiley][tilex] = E
+        elif mapplacement == "Secret Passage W > E":
+            newdungeon[tiley][tilex] = W
+        elif mapplacement == "Secret Passage N > S":
+            newdungeon[tiley][tilex] = N
+        elif mapplacement == "Secret Passage S > N":
+            newdungeon[tiley][tilex] = S
+
+        elif mapplacement == "Secret Passage":
+            newdungeon[tiley][tilex] = 9
+        elif mapplacement == "Secret Passage NS":
+            newdungeon[tiley][tilex] = 8
+        elif mapplacement == "Stairs Up":
+            newdungeon[tiley][tilex] = U
+        elif mapplacement == "Stairs Down":
+            newdungeon[tiley][tilex] = D
+
+        elif mapplacement == "Chest":
+            newdungeon[tiley][tilex] = C
+        elif mapplacement == "Merchant":
+            newdungeon[tiley][tilex] = M
+
+    def copyMap():
+            import pygame.scrap
+            import json
+            dungeon_str = json.dumps(newdungeon)
+
+            dungeon_bytes = dungeon_str.encode('utf-8')
+
+            pygame.scrap.put(pygame.SCRAP_TEXT, dungeon_bytes)
+            renpy.notify(_("Copied the dungeon to the clipboard."))
+
+default playermapzoom = 0.4
+default newdungeon = blankNewMap()
 
 screen party:
     zorder 0
@@ -45,6 +120,9 @@ screen party:
                         xsize 300
                         if charinit == n:
                             background "#224"
+                        
+                        if n.hp <= 0:
+                            background "#822"
                         vbox:
                             ymaximum 150
                             spacing 10
@@ -99,18 +177,22 @@ screen time:
         xsize 400
         background None
 
-        grid 1 2:
+        grid 1 3:
             xalign 0.5
             yalign 0.5
             text "Time:":
                 xalign 0.5
                 size 40
                 outlines [(4, "#333", 2, 2)]
-            text hour_names[hour]:
+            text f"{str(hour).zfill(2)} : {str(steps * 2).zfill(2)}":
+                xalign 0.5
                 size 40
-                if hour == 7:
+                outlines [(4, "#333", 2, 2)]
+            text hour_name:
+                size 40
+                if hour >= 3 and hour <= 5:
                     color "#000" outlines [(4, "#0C0", 2, 2)]
-                elif hour >= 4:
+                elif hour >= 18 or hour <= 2:
                     color "#00F" outlines [(4, "#FFF", 2, 2)]
                 else:
                     color "#FFF" outlines [(4, "#333", 2, 2)]
@@ -206,6 +288,16 @@ screen town:
             #         yalign 0.5
             #         action Call("levelup_label")
 
+            # null height 50
+            # frame:
+            #     xfill True    
+            #     ypadding 10
+            #     textbutton "Map Maker":
+            #         text_size 50
+            #         xalign 0.5
+            #         yalign 0.5
+            #         action Call("mapmaker_label")
+
 screen tavern:
     zorder 1
     tag menus
@@ -284,7 +376,7 @@ screen tavern:
                 xsize 440
                 xpos 20
 
-                text f"Accomodations for your group will cost {price} Cr.\n\nIs that okay?" size 30
+                text f"Accomodations for your group will cost {price} Cr.\n\nRest for 8 hours?" size 30
 
                 null height 50
                 text "Party Funds: " + str(party_money) size 30
@@ -1117,7 +1209,7 @@ screen party_menu_char:
 
             text "[n.race.name] [n.char_class.name]" size 20 ypos 50
             text "Level [n.level]" size 25 ypos 70
-            text "EXP {0} / {1}".format(n.exp, n.level * 1000) size 20 ypos 100
+            text "EXP {0} / {1}".format(n.exp, n.level * exptolevel) size 20 ypos 100
             
             text f"HP  {int(n.hp)} / {int(n.maxhp)}" size 30 ypos 130
             text f"TP  {int(n.tp)} / {int(n.maxtp)}" size 30 ypos 160
@@ -1916,15 +2008,20 @@ screen manageSkills:
                                     xsize 900
                                     ysize 80
                                     if any(substring in sk for substring in ["grun", "mor", "matha", "enhavi", "enhagi", "enhalk", "enfest","enfevi","enfegi","enfelk"]):
-                                        textbutton sk.upper():
-                                            text_size 25 action NullAction()
+                                        if "cura" in sk:
+                                            textbutton sk.upper():
+                                                text_size 25
+                                                action SetVariable("selected_skill", sk), Function(levelUpSkill_Check, selected_character, sk, False)
+                                        else:    
+                                            textbutton sk.upper():
+                                                text_size 25 action NullAction()
                                     else:
                                         textbutton sk.upper():
                                             text_size 25
-                                            action SetVariable("selected_skill", sk), Function(levelUpSkill_Check, char, sk, False)
+                                            action SetVariable("selected_skill", sk), Function(levelUpSkill_Check, selected_character, sk, False)
 
                                     if any(substring in sk for substring in ["grun", "mor", "matha", "enhavi", "enhagi", "enhalk", "enfest","enfevi","enfegi","enfelk"]):
-                                        text ""
+                                        text str(char.slist[sk][0]) size 25 xpos 220
                                     else:
                                         text f"Level " + str(char.slist[sk][0]) size 25 xpos 150
 
@@ -1941,7 +2038,7 @@ screen manageSkills:
                 vbar value YScrollValue("vpskills") xalign 1.0 xoffset 10
 
             showif selected_skill != None and selected_target != "choosing": # Use or Level Skill
-                frame:
+                frame: # Descriptor
                     background None
                     ysize 480
                     viewport id "skilldescriptor":
@@ -1952,7 +2049,7 @@ screen manageSkills:
                             text descriptor size 25 xsize 850 line_leading 15
                     vbar value YScrollValue("skilldescriptor") xalign 1.0 xoffset 10
 
-                fixed:
+                fixed: # Use skill button
                     ypos 500
                     xpos 10
                     if selected_skill != None:
@@ -1965,8 +2062,10 @@ screen manageSkills:
                                     else:
                                         action Function(skillCommand, char, selected_skill, None)
 
-
-                fixed:
+                # if selected_skill != None and any(substring in selected_skill for substring in ["grun", "mor", "matha", "enhavi", "enhagi", "enhalk", "enfest","enfevi","enfegi","enfelk"]):
+                #     pass
+                # else:
+                fixed: # Level up skill buttons
                     ypos 500
                     xpos 450
                     spacing 20
@@ -1975,11 +2074,11 @@ screen manageSkills:
                         xpos 300
                         xanchor 0.5
                         if selected_skill != None:
-                            if char.skillpts >0 and char.slist[selected_skill][0] < 10:
+                            if selected_character.skillpts >0 and selected_character.slist[selected_skill][0] < 10 and not any(substring in selected_skill for substring in ["grun", "mor", "matha"]):
                                 textbutton "Yes":
-                                    action Function(levelUpSkill_Check, char, selected_skill, True), SetVariable("selected_skill", None)
+                                    action Function(levelUpSkill_Check, selected_character, selected_skill, True), SetVariable("selected_skill", None)
                                     text_size 30
-                            elif char.slist[selected_skill][0] >= 10:
+                            elif selected_character.slist[selected_skill][0] >= 10:
                                 textbutton "Maxed" text_size 30
                             else:
                                 textbutton "No SP" text_size 30
@@ -2012,7 +2111,7 @@ screen manageSkills:
                                 xsize 400
                                 ysize 60
                                 textbutton person.name text_size 30 action Function(skillCommand, char, selected_skill, person)
-                                text f"{person.hp} / {person.maxhp}" size 25 xanchor 1.0 xpos 380 ypos 10
+                                text f"{int(person.hp)} / {int(person.maxhp)}" size 25 xanchor 1.0 xpos 380 ypos 10
                         frame:
                             xsize 400
                             textbutton "Cancel" text_size 30 action SetVariable("selected_target", None)
@@ -2023,7 +2122,7 @@ screen dungeon_danger:
         xsize 400
         ysize 200
         xalign 1.0
-        yalign 0.15
+        yalign 0.2
         xpadding 25
         ypadding 25
         background None
@@ -2044,7 +2143,13 @@ screen dungeon_danger:
                     color "#3F3" outlines [(4, "#333", 2, 2)]
                 else:
                     color "#FFF" outlines [(4, "#333", 2, 2)]
-
+            if restAreaCheck() == True:
+                text "Safe Area":
+                    xalign 0.5
+                    size 40
+                    bold True
+                    color "#3F3" outlines [(4, "#333", 2, 2)]
+            
 screen dungeon_explore:
     zorder -1
     frame:
@@ -2107,6 +2212,250 @@ screen dungeon_explore:
                             add "dgfloor"
 
 
+screen dungeon_playermap:
+    zorder +2
+
+    python:
+        if party_facing is not None: # Print Party Facing to middle of @localmap
+            if party_facing == 8:
+                dungeon_playermap[party_coord[0]][party_coord[1]] = "▲"
+
+            elif party_facing == 2:
+                dungeon_playermap[party_coord[0]][party_coord[1]] = "▼"
+
+            elif party_facing == 4:
+                dungeon_playermap[party_coord[0]][party_coord[1]] = "◄"
+            
+            elif party_facing == 6:
+                dungeon_playermap[party_coord[0]][party_coord[1]] = "►"
+
+    frame:
+        # xsize 1420
+        xfill True
+        ysize 780
+        xalign 1.0
+        # background None
+
+        key "K_TAB" action Return()
+
+        fixed: # Left menu
+            ypos 0
+            xsize 350
+            xpos 50
+
+            text f"Dungeon Map" size 50 xalign 0.0 ypos 50
+            text f"Floor: {dungeon_level}" size 30 ypos 180
+
+
+
+        fixed: # Return button
+                ypos 600
+                xsize 350
+                xpos 50
+                frame:
+                    xfill True
+                    textbutton "Return":
+                        text_size 40
+                        action Return(value=None)
+
+        frame:
+            xsize 1420
+            xalign 1.0
+            yalign 0.5
+
+            
+
+            viewport id "dgplayermap":
+                draggable True
+                mousewheel True
+                
+                grid len(dungeon_playermap) len(dungeon_playermap):
+                    xspacing 3
+                    yspacing 3
+                    xalign 0.5
+                    yalign 0.5
+
+                    for ty in range(len(dungeon_playermap)):
+                        for n in dungeon_playermap[ty]:
+                            if n == 0:
+                                add "dgfloor" zoom playermapzoom
+                            elif n == 1 or n == 9 or n == N or n == S or n == W or n == E:
+                                add "dgwall" zoom playermapzoom
+                            elif n == None or n == "out":
+                                add "dgdark" zoom playermapzoom
+                            elif n == 2 or n == 3:
+                                add "dgdoor" zoom playermapzoom
+                            elif n == D:
+                                add "dgstairsd" zoom playermapzoom
+                            elif n == U:
+                                add "dgstairsu" zoom playermapzoom
+                            elif n == C:
+                                add "dgchestc" zoom playermapzoom
+                            elif n == O:
+                                add "dgchesto" zoom playermapzoom
+                            elif n == "▲":
+                                add "partyN" zoom playermapzoom
+                            elif n == "▼":
+                                add "partyS" zoom playermapzoom
+                            elif n == "◄":
+                                add "partyW" zoom playermapzoom
+                            elif n == "►":
+                                add "partyE" zoom playermapzoom
+
+                            elif n == 6:
+                                add "dgpasswe" zoom playermapzoom
+                            elif n == 8:
+                                add "dgpassns" zoom playermapzoom
+                            elif n == M:
+                                add "dgmerch" zoom playermapzoom
+                            elif n == SO:
+                                add "dgpassn" zoom playermapzoom
+                            elif n == NO:
+                                add "dgpasss" zoom playermapzoom
+                            elif n == WO:
+                                add "dgpasse" zoom playermapzoom
+                            elif n == EO:
+                                add "dgpassw" zoom playermapzoom
+                            else:
+                                add "dgdark" zoom playermapzoom
+            
+            # bar value XScrollValue("dgplayermap") yalign 1.0 yoffset 10
+            vbar value YScrollValue("dgplayermap") xalign 1.0 xoffset 10
+
+    python:
+        dungeon_playermap[party_coord[0]][party_coord[1]] = 0
+
+screen mapmaker_screen:
+    zorder +2
+
+    
+
+    frame:
+        # xsize 1420
+        xfill True
+        # ysize 780
+        yfill True
+        xalign 1.0
+        # background None
+
+        # key "K_TAB" action Return()
+
+        fixed: # Left menu
+            ypos 0
+            xsize 350
+            xpos 50
+
+            text f"Dungeon Map" size 50 xalign 0.0 ypos 50
+            text f"Creating a new Floor" size 30 ypos 180
+            text f"Placement Mode:\n{mapplacement}" size 30 ypos 250
+
+        fixed: 
+            ypos 350
+            xpos 50
+            xsize 350
+            
+            transform: # TILE BUTTONS
+                zoom 0.8
+                grid 4 4:
+                    spacing 10
+
+                    imagebutton idle "dgwall" action SetVariable("mapplacement", "Wall")
+                    imagebutton idle "dgfloor" action SetVariable("mapplacement", "Floor")
+                    imagebutton idle "dgdoor" action SetVariable("mapplacement", "Door")
+                    text ""
+
+                    imagebutton idle "dgpassw" action SetVariable("mapplacement", "Secret Passage E > W")
+                    imagebutton idle "dgpassn" action SetVariable("mapplacement", "Secret Passage S > N")
+                    imagebutton idle "dgpasss" action SetVariable("mapplacement", "Secret Passage N > S")
+                    imagebutton idle "dgpasse" action SetVariable("mapplacement", "Secret Passage W > E")
+
+                    imagebutton idle "dgpasssecret" action SetVariable("mapplacement", "Secret Passage")
+                    text ""
+                    # imagebutton idle "dgpassns" action SetVariable("mapplacement", "Secret Passage NS")
+                    imagebutton idle "dgstairsu" action SetVariable("mapplacement", "Stairs Up")
+                    imagebutton idle "dgstairsd" action SetVariable("mapplacement", "Stairs Down")
+
+                    imagebutton idle "dgchestc" action SetVariable("mapplacement", "Chest")
+                    imagebutton idle "dgmerch" action SetVariable("mapplacement", "Merchant")
+                    text ""
+                    text ""
+
+            frame:
+                xfill True
+                ypos 400
+                textbutton "Clear" text_size 40 action SetVariable("newdungeon", blankNewMap())
+
+            frame:
+                xfill True
+                ypos 500
+                textbutton "Copy" text_size 40 action Function(copyMap)
+
+
+        fixed: # Return button
+                ypos 950
+                xsize 350
+                xpos 50
+                frame:
+                    xfill True
+                    textbutton "Return":
+                        text_size 40
+                        # action Return()
+                        action Hide("mapmaker_screen")
+
+        frame: # Map Tiles
+            xsize 1420
+            xalign 1.0
+            yalign 0.5
+
+            viewport id "mapmakerscren":
+                # draggable True
+                mousewheel True
+                
+                grid len(newdungeon) len(newdungeon):
+                    xspacing 3
+                    yspacing 3
+                    xalign 0.5
+                    yalign 0.5
+
+                    for ty in range(len(newdungeon)):
+
+                        for tx in range(len(newdungeon[ty])):
+                            transform:
+                                zoom 0.4
+                                if newdungeon[ty][tx] == 0:
+                                    imagebutton idle "dgfloor" action Function(toggleMapTile, ty, tx)
+                                elif newdungeon[ty][tx] == 1:
+                                    imagebutton idle "dgwall" action Function(toggleMapTile, ty, tx)
+                                elif newdungeon[ty][tx] == 2:
+                                    imagebutton idle "dgdoor" action Function(toggleMapTile, ty, tx)
+
+                                elif newdungeon[ty][tx] == E:
+                                    imagebutton idle "dgpassw" action Function(toggleMapTile, ty, tx)
+                                elif newdungeon[ty][tx] == W:
+                                    imagebutton idle "dgpasse" action Function(toggleMapTile, ty, tx)
+                                elif newdungeon[ty][tx] == N:
+                                    imagebutton idle "dgpasss" action Function(toggleMapTile, ty, tx)
+                                elif newdungeon[ty][tx] == S:
+                                    imagebutton idle "dgpassn" action Function(toggleMapTile, ty, tx)
+
+                                elif newdungeon[ty][tx] == 9:
+                                    imagebutton idle "dgpasssecret" action Function(toggleMapTile, ty, tx)
+                                elif newdungeon[ty][tx] == U:
+                                    imagebutton idle "dgstairsu" action Function(toggleMapTile, ty, tx)
+                                elif newdungeon[ty][tx] == D:
+                                    imagebutton idle "dgstairsd" action Function(toggleMapTile, ty, tx)
+
+                                elif newdungeon[ty][tx] == C:
+                                    imagebutton idle "dgchestc" action Function(toggleMapTile, ty, tx)
+                                elif newdungeon[ty][tx] == M:
+                                    imagebutton idle "dgmerch" action Function(toggleMapTile, ty, tx)
+
+            # bar value XScrollValue("mapmakerscren") yalign 1.0 yoffset 10
+            vbar value YScrollValue("mapmakerscren") xalign 1.0 xoffset 10
+
+    python:
+        dungeon_playermap[party_coord[0]][party_coord[1]] = 0
+
 
 
 $ logoffset = 0
@@ -2158,26 +2507,28 @@ screen dungeon_command:
                 # imagebutton idle "buttonrightidle" hover "buttonrighthover" action NullAction()
 
                 # imagebutton idle "buttonhandidle" hover "buttonlefthover"  action NullAction()
-                text ""
+                imagebutton idle "buttonmapidle" hover "buttonmaphover" action Call("dgplayermap_label")
                 imagebutton idle "buttonhandidle" hover "buttonhandhover" action Function(interactKey)
                 imagebutton idle "buttonpartyidle" hover "buttonpartyhover" action Call("party_menu_scene")
 
             fixed:
-                ypos -250
+                ypos -280
+                xpos -10
                 
                 
-                text "Q" size 50 xpos 80 outlines [(3, "#333", 2, 2)]
-                text "W" size 50 xpos 230 outlines [(3, "#333", 2, 2)]
-                text "E" size 50 xpos 380 outlines [(3, "#333", 2, 2)]
-                text "F" size 50 xpos 240 ypos 160 outlines [(3, "#333", 2, 2)]
-                text "R" size 50 xpos 380 ypos 160 outlines [(3, "#333", 2, 2)]
+                text "Q" size 30 xpos 50 outlines [(3, "#333", 2, 2)]
+                text "W" size 30 xpos 200 outlines [(3, "#333", 2, 2)]
+                text "E" size 30 xpos 350 outlines [(3, "#333", 2, 2)]
+                text "TAB" size 30 xpos 50 ypos 150 outlines [(3, "#333", 2, 2)]
+                text "F" size 30 xpos 200 ypos 150 outlines [(3, "#333", 2, 2)]
+                text "R" size 30 xpos 350 ypos 150 outlines [(3, "#333", 2, 2)]
 
             key "q" action Function(turnLeft)
             key "w" action Function(moveForwards)
             key "e" action Function(turnRight)
             # key "a" action Function
             # key "s" action Function
-            # key "d" action Function
+            key "K_TAB" action Call("dgplayermap_label")
             key "f" action Function(interactKey)
             key "r" action Call("party_menu_scene")
 
@@ -2194,17 +2545,19 @@ screen initiative_screen:
 
         vbox:
             xsize 950
-            text "INITIATIVE:"
+            text "INITIATIVE:" size 30
             hbox:
                 box_wrap True
                 for char in initiative:
                     if char in opposition:
-                        text char.name + ", " color "#FA0"
+                        text char.name + ", " color "#FA0" size 25
                     else:
                         if char == charinit:
-                            text char.name + ", " color "#7070b9"
+                            text char.name + ", " color "#7070b9" size 25
+                        elif char.hp <= 0:
+                            text char.name + ", " color "#F55" size 25
                         else:
-                            text char.name + ", "
+                            text char.name + ", " size 25
 
 screen combat_screen:
     zorder -1
@@ -2224,6 +2577,7 @@ screen combat_screen:
                     add "dgmerch" xanchor 0.5 
                     text enemy.name size 30 xanchor 0.5
                     bar value AnimatedValue(value=enemy.hp, range=enemy.maxhp,delay=0.5) xsize 250 ysize 30 xanchor 0.5
+                    text f"Level {enemy.level}" size 30 xanchor 0.5
 
 screen combat_log:
     
@@ -2272,22 +2626,22 @@ screen combat_command: # Command for @charinit
                         spacing 10
                         
 
-                        text "Command:"
+                        text "Command:" size 30
                         frame:
                             xsize 400
-                            textbutton "Attack" action SetVariable("battlecommand", "Attack")
+                            textbutton "Attack" action SetVariable("battlecommand", "Attack") text_size 30
                         frame:
                             xsize 400
-                            textbutton "Skills" action SetVariable("battlecommand", "Skill")
+                            textbutton "Skills" action SetVariable("battlecommand", "Skill") text_size 30
                         frame:
                             xsize 400
-                            textbutton "Defend" action SetVariable("battlecommand", "Defend")
+                            textbutton "Defend" action SetVariable("battlecommand", "Defend") text_size 30
                         frame:
                             xsize 400
-                            textbutton "Item" action SetVariable("battlecommand", "Item")
+                            textbutton "Item" action SetVariable("battlecommand", "Item") text_size 30
                         frame:
                             xsize 400
-                            textbutton "Escape" action SetVariable("battlecommand", "Escape")
+                            textbutton "Escape" action SetVariable("battlecommand", "Escape") text_size 30
 
                 showif battlecommand == "Attack":
                     vbox:
@@ -2295,14 +2649,14 @@ screen combat_command: # Command for @charinit
                         xpos 20
                         spacing 10
                         
-                        text "Who?"
+                        text "Who?" size 30
                         frame:
                             xsize 400
-                            textbutton "Return" action SetVariable("battlecommand", None)
+                            textbutton "Return" action SetVariable("battlecommand", None) text_size 30
                         for enemy in opposition:
                             frame:
                                 xsize 400
-                                textbutton enemy.name action Function(attackfunc, charinit, enemy), SetVariable("charinit.acted", True), Return()
+                                textbutton enemy.name text_size 30 action Function(attackfunc, charinit, enemy), SetVariable("charinit.acted", True), Return()
 
                 showif battlecommand == "Skill":
                     vbox:
@@ -2310,10 +2664,10 @@ screen combat_command: # Command for @charinit
                         xpos 20
                         spacing 10
                         
-                        text "Which?"
+                        text "Which?" size 30
                         frame:
                             xsize 400
-                            textbutton "Return" action SetVariable("battlecommand", None)
+                            textbutton "Return" action SetVariable("battlecommand", None) text_size 30
                         for skill in charinit.slist:
                             frame:
                                 xsize 400
@@ -2323,7 +2677,7 @@ screen combat_command: # Command for @charinit
 
                                     # HP/TP Costs
                                     if charinit.slist[skill][2] > 0:
-                                        text  str(charinit.slist[skill][2]) + f" TP" size 25 ypos 10  xpos 380 xanchor 1.0
+                                        text  str(charinit.slist[skill][2]) + f" TP" size 25 ypos 10  xpos 380 xanchor 1.0 
 
                                     if len(charinit.slist[skill]) > 3 and charinit.slist[skill][3] != "S" and charinit.slist[skill][3] > 0:
                                         text  str(charinit.slist[skill][3]) + f" HP" size 25 ypos 10 xpos 300 xanchor 1.0
@@ -2334,14 +2688,14 @@ screen combat_command: # Command for @charinit
                         xpos 20
                         spacing 10
                         
-                        text "Confirm?"
+                        text "Confirm?" size 30
                         if selected_skill != None:
                             text selected_skill.upper() + ": " + charinit.slist[selected_skill][1] size 25 xsize 400
                             # text charinit.slist[selected_skill][1] size 25
 
                         frame:
                             xsize 400
-                            textbutton "Return" action SetVariable("selected_skill", None), SetVariable("battlecommand", "Skill")
+                            textbutton "Return" action SetVariable("selected_skill", None), SetVariable("battlecommand", "Skill") text_size 30
                         
                         if selected_skill != None:
                             
@@ -2350,26 +2704,26 @@ screen combat_command: # Command for @charinit
                                 for enemy in opposition:
                                     frame:
                                         xsize 400
-                                        textbutton enemy.name action Function(skillCommand,charinit,selected_skill, enemy)#, SetVariable("charinit.acted", True), SetVariable("selected_skill", None), Return()
+                                        textbutton enemy.name text_size 30 action Function(skillCommand,charinit,selected_skill, enemy) 
 
                             # ELEM SKILL Target ALL enemies
                             elif "cura" not in selected_skill and "revita" not in selected_skill and "grun" in selected_skill and any(element in selected_skill for element in ["firo", "gelo", "gale", "tera", "volt", "veno", "nuke"]): # Target all enemies
                                 frame:
                                     xsize 400
-                                    textbutton "Confirm" action Function(skillCommand,charinit,selected_skill, None)#, SetVariable("charinit.acted", True), SetVariable("selected_skill", None), Return()
+                                    textbutton "Confirm" text_size 30 action Function(skillCommand,charinit,selected_skill, None)#, SetVariable("charinit.acted", True), SetVariable("selected_skill", None), Return()
 
                             # PHYSical skills ONE Enemy: SNEAK / HUNT
                             elif selected_skill in ("sneak","charge","hunt"): # Physical Skills
                                 for enemy in opposition:
                                     frame:
                                         xsize 400
-                                        textbutton enemy.name action Function(skillCommandPhys,charinit,selected_skill, enemy)#, SetVariable("charinit.acted", True), SetVariable("selected_skill", None), Return()
+                                        textbutton enemy.name text_size 30 action Function(skillCommandPhys,charinit,selected_skill, enemy)#, SetVariable("charinit.acted", True), SetVariable("selected_skill", None), Return()
 
                             # PHYSical Skills GROUP: CLEAVE / BOMB
                             elif "cleave" in selected_skill or "bomb" in selected_skill: # Physical Skills
                                 frame:
                                     xsize 400
-                                    textbutton "Confirm" action Function(skillCommandPhys,charinit,selected_skill, None)#, SetVariable("charinit.acted", True), SetVariable("selected_skill", None), Return()
+                                    textbutton "Confirm" text_size 30 action Function(skillCommandPhys,charinit,selected_skill, None)#, SetVariable("charinit.acted", True), SetVariable("selected_skill", None), Return()
 
                             # CURA
                             elif "cura" in selected_skill and "grun" not in selected_skill: # Target one ally
@@ -2377,7 +2731,7 @@ screen combat_command: # Command for @charinit
                                     if char.hp >0:
                                         frame:
                                             xsize 400
-                                            textbutton char.name action Function(skillCommand,charinit,selected_skill, char)#, SetVariable("charinit.acted", True), SetVariable("selected_skill", None), Return()
+                                            textbutton char.name text_size 30 action Function(skillCommand,charinit,selected_skill, char)#, SetVariable("charinit.acted", True), SetVariable("selected_skill", None), Return()
 
                             # REVITA
                             elif "revita" in selected_skill:
@@ -2385,45 +2739,45 @@ screen combat_command: # Command for @charinit
                                     if char.hp <= 0:
                                         frame:
                                             xsize 400
-                                            textbutton char.name action Function(skillCommand,charinit,selected_skill, char)#, SetVariable("charinit.acted", True), SetVariable("selected_skill", None), Return()
+                                            textbutton char.name text_size 30 action Function(skillCommand,charinit,selected_skill, char)#, SetVariable("charinit.acted", True), SetVariable("selected_skill", None), Return()
 
                             # GRUN CURA 
                             elif "cura" in selected_skill and "grun" in selected_skill: # Target all allies
                                 frame:
                                     xsize 400
-                                    textbutton "Confirm" action Function(skillCommand,charinit,selected_skill, None)#, SetVariable("charinit.acted", True), SetVariable("selected_skill", None), Return()
+                                    textbutton "Confirm" text_size 30 action Function(skillCommand,charinit,selected_skill, None)#, SetVariable("charinit.acted", True), SetVariable("selected_skill", None), Return()
 
                             # DECOY
                             elif selected_skill in "decoy":
                                 frame:
                                     xsize 400
-                                    textbutton "Confirm" action Function(skillCommandSupp,charinit,selected_skill, None), SetVariable("selected_skill", None)
+                                    textbutton "Confirm" text_size 30 action Function(skillCommandSupp,charinit,selected_skill, None), SetVariable("selected_skill", None)
 
                             # ENHA skills / single
                             elif "enha" in selected_skill and "grun" not in selected_skill:
                                 for char in party:
                                     frame:
                                         xsize 400
-                                        textbutton char.name action Function(skillCommandSupp,charinit,selected_skill, char), SetVariable("selected_skill", None)
+                                        textbutton char.name text_size 30 action Function(skillCommandSupp,charinit,selected_skill, char), SetVariable("selected_skill", None)
 
                             # ENHA skills / group / PROTECT / TAUNT / COATING
                             elif "enha" in selected_skill and "grun" in selected_skill or "protect" in selected_skill or "taunt" in selected_skill or "coating" in selected_skill:
                                 frame:
                                     xsize 400
-                                    textbutton "Confirm" action Function(skillCommandSupp,charinit,selected_skill, None), SetVariable("selected_skill", None)
+                                    textbutton "Confirm" text_size 30 action Function(skillCommandSupp,charinit,selected_skill, None), SetVariable("selected_skill", None)
 
                             # ENFE skills / single / APPRAISE
                             elif "enfe" in selected_skill and "grun" not in selected_skill or "appraise" in selected_skill:
                                 for enemy in opposition:
                                     frame:
                                         xsize 400
-                                        textbutton enemy.name action Function(skillCommandSupp,charinit,selected_skill, enemy), SetVariable("selected_skill", None)
+                                        textbutton enemy.name text_size 30 action Function(skillCommandSupp,charinit,selected_skill, enemy), SetVariable("selected_skill", None)
 
                             # ENFE skills / GROUP
                             elif "enfe" in selected_skill and "grun" in selected_skill:
                                 frame:
                                     xsize 400
-                                    textbutton "Confirm" action Function(skillCommandSupp,charinit,selected_skill, None), SetVariable("selected_skill", None)
+                                    textbutton "Confirm" text_size 30 action Function(skillCommandSupp,charinit,selected_skill, None), SetVariable("selected_skill", None)
 
                 showif battlecommand == "Defend":
                     vbox:
@@ -2431,13 +2785,13 @@ screen combat_command: # Command for @charinit
                         xpos 20
                         spacing 10
                         
-                        text "You sure?"
+                        text "You sure?" size 30
                         frame:
                             xsize 400
-                            textbutton "Return" action SetVariable("battlecommand", None)
+                            textbutton "Return" action SetVariable("battlecommand", None) text_size 30
                         frame:
                             xsize 400
-                            textbutton "Confirm" action SetVariable("charinit.defending", True), SetVariable("charinit.acted",True), Function(logText,f"{charinit.name} is defending."), Return()
+                            textbutton "Confirm" text_size 30 action SetVariable("charinit.defending", True), SetVariable("charinit.acted",True), Function(logText,f"{charinit.name} is defending."), Return()
 
                 showif battlecommand == "Item":
                     vbox:
@@ -2445,16 +2799,16 @@ screen combat_command: # Command for @charinit
                         xpos 20
                         spacing 10
                         
-                        text "What Item?"
+                        text "What Item?" size 30
                         frame:
                             xsize 400
-                            textbutton "Return" action SetVariable("battlecommand", None)
+                            textbutton "Return" text_size 30 action SetVariable("battlecommand", None) 
                         
                         for item in consumables:
                             if item.type in ("Healing","Reviving","Combat"):
                                 frame:
                                     xsize 400
-                                    textbutton item.name action SetVariable("selected_item", item), SetVariable("battlecommand", "Itemchoosen")
+                                    textbutton item.name text_size 30 action SetVariable("selected_item", item), SetVariable("battlecommand", "Itemchoosen")
 
                 showif battlecommand == "Itemchoosen":
                     vbox:
@@ -2462,20 +2816,20 @@ screen combat_command: # Command for @charinit
                         xpos 20
                         spacing 10
                         
-                        text "You Sure?"
+                        text "You Sure?" size 30
                         if selected_item != None and selected_item != True:
                             text selected_item.name size 25
                             text selected_item.lore size 25
                         frame:
                             xsize 400
-                            textbutton "Return" action SetVariable("battlecommand", None)
+                            textbutton "Return" text_size 30 action SetVariable("battlecommand", None)
                         
                         if selected_item != None and selected_item != True:
                             if selected_item.type in ("Healing","Reviving"): # Healing items
                                 for char in party:
                                     frame:
                                         xsize 400
-                                        textbutton char.name action Function(useItem, selected_item, char)
+                                        textbutton char.name text_size 30 action Function(useItem, selected_item, char)
                                     
                         if selected_item == True:
                             timer 0.001 action SetVariable("charinit.acted", True), SetVariable("selected_item", None), Return()
@@ -2486,13 +2840,13 @@ screen combat_command: # Command for @charinit
                         xpos 20
                         spacing 10
                         
-                        text "You sure?"
+                        text "You sure?" size 30
                         frame:
                             xsize 400
-                            textbutton "Return" action SetVariable("battlecommand", None)
+                            textbutton "Return" text_size 30 action SetVariable("battlecommand", None)
                         frame:
                             xsize 400
-                            textbutton "Confirm" action Function(escapeCommand, charinit),  Return()
+                            textbutton "Confirm" text_size 30 action Function(escapeCommand, charinit),  Return()
 
         vbar value YScrollValue("combcomm") xalign 1.0 xoffset 10
 
@@ -2524,8 +2878,11 @@ screen combat_results:
                             ysize 40
                             text char.name.upper() size 30
                             text "Level " + str(char.level) + " / Experience:" size 30 xanchor 0.5 xpos 400
-                            text str(char.exp) + " / " + str(char.level * 1000) xanchor 1.0 size 30 xpos 800
-                bar value AnimatedValue(value=char.exp, range=char.level *1000, delay=2) xsize 800 ysize 20
+                            text str(char.exp) + " / " + str(char.level * exptolevel) xanchor 1.0 size 30 xpos 800
+                if char.level > 1:
+                    bar value AnimatedValue(value=(char.exp - (char.level -1)  * exptolevel), range=(char.level -1) *exptolevel, delay=2) xsize 800 ysize 20
+                else:
+                    bar value AnimatedValue(value=(char.exp - (char.level -1)  * exptolevel), range=(char.level) *exptolevel, delay=2) xsize 800 ysize 20
                 null height 20
             
             null height 50
@@ -2658,21 +3015,6 @@ screen levelUpScreen:
                         ysize 50
                         textbutton "+ 1" text_size 28 yalign 0.5 action SetVariable("charstattolevel", "lck"), Return()
                     text f">  {math.floor(chartolevel.lck+chartolevel.char_class.improv[6]+1)}" xpos 520
-
-screen player_dmg(target, finaldamage):
-    zorder 4
-    $ playerpos = 500
-    if target in party:
-        if party.index(target) == 0:
-            $ playerpos = 740
-        if party.index(target) == 1:
-            $ playerpos = 1050
-        if party.index(target) == 2:
-            $ playerpos = 1360
-        if party.index(target) == 3:
-            $ playerpos = 1690
-
-    text "[finaldamage]" anchor (0.5, 0.5) xpos playerpos ypos 800 #at dissolve
 
 
 ##

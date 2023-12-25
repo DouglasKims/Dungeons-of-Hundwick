@@ -4,37 +4,6 @@ init python:
     import os
     import copy
 
-    BLACK = "\033[30m"
-    RED = "\033[31m"
-    GREEN = "\033[32m"
-    YELLOW = "\033[33m"
-    BLUE = "\033[34m"
-    MAGENTA = "\033[35m"
-    CYAN = "\033[36m"
-    WHITE = "\033[37m"
-    RESET = "\033[0m"  # Reset to default color
-
-    # Bright versions
-    BRIGHT_BLACK = "\033[90m"
-    BRIGHT_RED = "\033[91m"
-    BRIGHT_GREEN = "\033[92m"
-    BRIGHT_YELLOW = "\033[93m"
-    BRIGHT_BLUE = "\033[94m"
-    BRIGHT_MAGENTA = "\033[95m"
-    BRIGHT_CYAN = "\033[96m"
-    BRIGHT_WHITE = "\033[97m"
-
-    # Background colors (add 10 to the color code)
-    BG_BLACK = "\033[40m"
-    BG_RED = "\033[41m"
-    BG_GREEN = "\033[42m"
-    BG_YELLOW = "\033[43m"
-    BG_BLUE = "\033[44m"
-    BG_MAGENTA = "\033[45m"
-    BG_CYAN = "\033[46m"
-    BG_WHITE = "\033[47m"
-
-
     # LOGIC
 
     class Equipment():
@@ -65,31 +34,57 @@ init python:
 
     armor1 = Equipment("Cloth Armor","Armor",1,None,str=0,dmg=0,tec=0,vit=1,agi=1,lck=0,weak=None,resist=None,value=20,
                     lore="Simple armor that provides minimal protection to wearer, but allows good freedom of movement.")
-    armor2 = Equipment("Chain Mail","Armor",1,None,str=0,dmg=0,tec=0,vit=2,agi=0,lck=0,weak=None,resist=None,value=50,
+    armor2 = Equipment("Chain Mail","Armor",1,None,str=0,dmg=0,tec=0,vit=2,agi=0,lck=0,weak=None,resist=None,value=80,
                     lore="Simple armor that offers decent protection, but too heavy for the untrained to wear.")
+    armor3 = Equipment("Conjurer Robe","Armor",1,None,str=0,dmg=0,tec=1,vit=2,agi=1,lck=0,weak=None,resist=None,value=200,
+                    lore="Robes that doesn't restrict movement and eases the use of techniques.")
+    armor4 = Equipment("Breastplate","Armor",1,None,str=0,dmg=0,tec=0,vit=5,agi=0,lck=0,weak=None,resist=None,value=300,
+                    lore="Protective armor that lessens the impact of stronger blows to vital areas.")
+                
     weapon1 = Equipment("Simple Blade","Weapon",1,None,str=1,dmg=0,tec=0,vit=0,agi=0,lck=0,weak=None,resist=None,value=10,
                         lore="Simple weapon that offers basic means of offense and wieldy enough for anyone to use.")
     weapon2 = Equipment("Sturdy Branch","Weapon",1,None,str=0,dmg=0,tec=1,vit=0,agi=0,lck=0,weak=None,resist=None,value=20,
                         lore="An ordinary tree branch inscribed with runes to facilitate the use of techniques in combat.")
-    weapon3 = Equipment("Sharpened Blade","Weapon",1,None,str=3,dmg=1,tec=0,vit=0,agi=0,lck=0,weak=None,resist=None,value=80,
+    weapon3 = Equipment("Sharpened Blade","Weapon",1,None,str=3,dmg=1,tec=0,vit=0,agi=0,lck=0,weak=None,resist=None,value=100,
                         lore="A weapon made to inflict grievous wounds and shorten the duration of battles.")
-    acc1 = Equipment("Round Shield","Accessory",1,None,str=-2,dmg=0,tec=0,vit=2,agi=-1,lck=0,weak=None,resist=None,value=30,
-                        lore="A large pot lid repurposed into a shield. Not the sturdiest, but can still deflect some blows.")
-    chr1 = Equipment("Focus Ring","Charm",1,None,str=0,dmg=0,tec=1,vit=0,agi=0,lck=0,weak=None,resist=None,value=50,
-                        lore="A ring inscribed with runes that assists the wielder in remembering techniques in combat.")
-    chr2 = Equipment("Lucky Charm","Charm",1,None,str=0,dmg=0,tec=0,vit=0,agi=0,lck=1,weak=None,resist=None,value=50,
-                        lore="An amulet decorated with symbols of luck, said to work even for non-believers.")
-    chr3 = Equipment("Fire Ring","Charm",1,None,str=0,dmg=0,tec=0,vit=0,agi=0,lck=0,weak=None,resist=["fire"],value=50,
-                        lore="A charred and blackened ring that increases the user's protection to fire.")
+    weapon4 = Equipment("Carved Branch","Weapon",1,None,str=1,dmg=0,tec=3,vit=0,agi=0,lck=0,weak=None,resist=None,value=100,
+                        lore="A lenght of wood inscribed with powerful runes.")
 
-    item1 = Consumable("Healing Draught","Healing","Heals 30 HP",10)
-    item2 = Consumable("Invigorating Tonic","Healing","Recovers 15 TP",50)
-    item3 = Consumable("Charged Memento","Reviving","Revives with 25% HP", 50)
+    acc1 = Equipment("Round Shield","Accessory",1,None,str=0,dmg=0,tec=0,vit=2,agi=0,lck=0,weak=None,resist=None,value=50,
+                        lore="A large pot lid repurposed into a shield. Not the sturdiest, but can still deflect some blows.")
+    acc2 = Equipment("Grimoire","Accessory",1,None,str=0,dmg=0,tec=2,vit=0,agi=0,lck=0,weak=None,resist=None,value=80,
+                        lore="A thick leather-bound book with many incantations written down.")
+    acc3 = Equipment("Slick Boots","Accessory",1,None,str=0,dmg=0,tec=0,vit=0,agi=2,lck=0,weak=None,resist=None,value=50,
+                        lore="This footwear improves grip in most wild terrain, allowing the user to move more precisely.")
+    acc4 = Equipment("Gauntlets","Accessory",1,None,str=1,dmg=0,tec=0,vit=1,agi=0,lck=0,weak=None,resist=None,value=80,
+                        lore="Reinforced gloves that improves the grip of weapons and helps wielding them in combat.")
+
+    chr1 = Equipment("Focus Ring","Charm",1,None,str=0,dmg=0,tec=2,vit=0,agi=0,lck=0,weak=None,resist=None,value=100,
+                        lore="A ring inscribed with runes that assists the wielder in remembering techniques in combat.")
+    chr2 = Equipment("Lucky Charm","Charm",1,None,str=0,dmg=0,tec=0,vit=0,agi=0,lck=2,weak=None,resist=None,value=100,
+                        lore="An amulet decorated with symbols of luck, said to work even for non-believers.")
+    chr3 = Equipment("Fire Ring","Charm",1,None,str=0,dmg=1,tec=0,vit=0,agi=0,lck=0,weak=None,resist=["fire"],value=100,
+                        lore="A charred and blackened ring that increases the user's protection to fire and strenghtens them.")
+    chr4 = Equipment("Amulet of Power","Charm",1,None,str=2,dmg=1,tec=2,vit=2,agi=2,lck=2,weak=None,resist=None,value=800,
+                        lore="An amulet imbued with mighty power that strengthens the user. Incredibly Valuable.")
+
+    item1 = Consumable("Healing Draught D","Healing","Heals 50 HP",20)
+    item11 = Consumable("Healing Draught C","Healing","Heals 100 HP",30)
+    item12 = Consumable("Healing Draught B","Healing","Heals 200 HP",50)
+    item2 = Consumable("Invigorating Tonic D","Healing","Recovers 15 TP",50)
+    item21 = Consumable("Invigorating Tonic C","Healing","Recovers 30 TP",100)
+    item22 = Consumable("Invigorating Tonic B","Healing","Recovers 60 TP",200)
+    item3 = Consumable("Charged Memento","Reviving","Revives with 25% HP", 80)
     item4 = Consumable("Rations","Rest","Eating these in a safe place will recover half HP and TP to the party.", 50)
-    item5 = Consumable("Urn of Ret","Return","Breaking this urn releases the magical powder that returns the party to town.", 50)
+    item5 = Consumable("Urn of Ret","Return","Breaking this urn releases the magical powder that returns the party to town.", 100)
 
     # SHOP STOCK
-    shop_stock = [armor1, armor2,weapon1,weapon2,acc1,chr1,chr2,chr3,item1,item2,item3,item4,item5]
+    shop_stock = [
+        armor1, armor2, armor3, armor4,
+        weapon1,weapon2,weapon3, weapon4,
+        acc1, acc2, acc3, acc4,
+        chr1,chr2,chr3,chr4,
+        item1,item11, item12, item2, item21, item22,item3,item4,item5]
 
     # EQUIPMENT
     inventory = [armor1, armor2, weapon1, weapon2]
@@ -346,12 +341,17 @@ init python:
 # RENPY DEFAULTS
 
 # SHOP STOCK
-default shop_stock = [armor1, armor2,weapon1,weapon2,acc1,chr1,chr2,chr3,item1,item2,item3,item4,item5]
+default shop_stock = [
+        armor1, armor2, armor3, armor4,
+        weapon1,weapon2,weapon3, weapon4,
+        acc1, acc2, acc3, acc4,
+        chr1,chr2,chr3,chr4,
+        item1,item11, item12, item2, item21, item22,item3,item4,item5]
 
 # EQUIPMENT
-default inventory = [armor1, armor2, weapon1, weapon2]
+default inventory = []
 default inventorylimt = 20
 
 # CONSUMABLES
-default consumables = [item1, item2, item3, item4, item5]
+default consumables = []
 default consumableslimit = 20

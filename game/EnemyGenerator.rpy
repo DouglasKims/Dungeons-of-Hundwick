@@ -5,7 +5,7 @@ init python:
     import math
 
     class Enemy:
-        def __init__(self,name,level,maxhp,hp,tp,str,dmg,tec,vit,agi,lck,defending,weak,resist,exp,money,init, effects):
+        def __init__(self,name,level,maxhp,hp,tp,str,dmg,tec,vit,agi,lck,defending,weak,resist,exp,money,init, slist, effects):
             self.name = name
             self.level = level
             self.maxhp = maxhp
@@ -24,6 +24,7 @@ init python:
             self.money = money
             self.init = init
             self.effects = effects
+            self.slist = slist
 
     class EnemyType():
         def __init__(self, name, hp, tp, str, dmg, tec, vit, agi, lck, imphp, imptp, impstr, impdmg, imptec, impvit, impagi, implck):
@@ -51,7 +52,7 @@ init python:
     defaultEnemy = Enemy(
         name = "Enemy", level = 1, maxhp=1, hp = 1, tp = 1,
         str = 1, dmg = 1, tec = 1, vit = 1, agi = 1, lck = 1,
-        defending=False,weak=[],resist=[],exp=0,money=0,init=0,effects={}
+        defending=False,weak=[],resist=[],exp=0,money=0,init=0,effects={}, slist= {}
         )
 
     enemylist = []
@@ -67,9 +68,9 @@ init python:
                     imphp = round((80 * (random.random()/2 + 0.75)) * 0.25),
                     tp = 4,
                     imptp = 2,
-                    str = random.randint(4,6),
+                    str = random.randint(5,7),
                     impstr = random.randint(4,6),
-                    tec = random.randint(4,6),
+                    tec = random.randint(3,5),
                     imptec = random.randint(2,4),
                     dmg = 1,
                     impdmg = 1/3,
@@ -80,7 +81,7 @@ init python:
                     lck = random.randint(5,7),
                     implck = random.randint(4,6),
                     )
-            money = random.randint(2,5)
+            money = random.randint(2,3)
             new.weak.append(random.choice(["fire","ice","wind","earth"]))
             new.resist.append("phys")
 
@@ -104,7 +105,7 @@ init python:
                     lck = random.randint(9,11),
                     implck = random.randint(5,7)
                     )
-            money = random.randint(3,8)
+            money = random.randint(2,4)
             new.weak.append("phys")
             new.weak.append(random.choice(["ice","earth"]))
 
@@ -115,7 +116,7 @@ init python:
                     imphp = round((150 * (random.random()/2 + 0.75)) * 0.25),
                     tp = 5,
                     imptp = 3,
-                    str = random.randint(5,7),
+                    str = random.randint(4,6),
                     impstr = random.randint(5,7),
                     tec = random.randint(3,5),
                     imptec = random.randint(2,4),
@@ -128,7 +129,7 @@ init python:
                     lck = random.randint(2,4),
                     implck = random.randint(3,5)
                     )
-            money = random.randint(5,10)
+            money = random.randint(2,5)
             new.weak.append(random.choice(["fire","ice","wind","earth","thunder"]))
             new.weak.append("toxic")
 
@@ -137,12 +138,12 @@ init python:
                     name = "Colt",
                     hp = round (120 * (random.random()/2 + 0.75)),
                     imphp = round((120 * (random.random()/2 + 0.75)) * 0.25),
-                    tp = 15,
+                    tp = 8,
                     imptp = 5,
-                    str = random.randint(5,7),
+                    str = random.randint(4,6),
                     impstr = random.randint(4,6),
-                    tec = random.randint(5,7),
-                    imptec = random.randint(4,6),
+                    tec = random.randint(4,6),
+                    imptec = random.randint(2,4),
                     dmg = 1,
                     impdmg = 1/3,
                     vit = random.randint(7,9),
@@ -152,7 +153,7 @@ init python:
                     lck = random.randint(3,5),
                     implck = random.randint(4,6)
                     )
-            money = random.randint(6,15)
+            money = random.randint(2,6)
             new.weak.append(random.choice(["fire","ice","wind","earth","thunder","toxic"]))
             newelem = None
             while newelem in new.weak or newelem == None:
@@ -164,12 +165,12 @@ init python:
                     name = "Adhbah",
                     hp = round (80 * (random.random()/2 + 0.75)),
                     imphp = round((80 * (random.random()/2 + 0.75)) * 0.25),
-                    tp = 20,
+                    tp = 12,
                     imptp = 8,
                     str = random.randint(2,4),
                     impstr = random.randint(2,4),
-                    tec = random.randint(7,9),
-                    imptec = random.randint(4,6),
+                    tec = random.randint(4,6),
+                    imptec = random.randint(3,5),
                     dmg = 1,
                     impdmg = 1/5,
                     vit = random.randint(5,7),
@@ -179,7 +180,7 @@ init python:
                     lck = random.randint(3,5),
                     implck = random.randint(4,6)
                     )
-            money = random.randint(6,12)
+            money = random.randint(3,5)
             new.resist.append(random.choice(["fire","ice","wind","earth","thunder","toxic"]))
             
         if type == "Grain":
@@ -187,14 +188,14 @@ init python:
                     name = "Grain",
                     hp = round (60 * (random.random()/2 + 0.75)),
                     imphp = round((60 * (random.random()/2 + 0.75)) * 0.25),
-                    tp = 20,
+                    tp = 15,
                     imptp = 10,
                     str = random.randint(2,4),
                     impstr = random.randint(2,4),
-                    tec = random.randint(7,9),
-                    imptec = random.randint(5,7),
+                    tec = random.randint(5,7),
+                    imptec = random.randint(4,6),
                     dmg = 1,
-                    impdmg = 1/5,
+                    impdmg = 1/6,
                     vit = random.randint(5,7),
                     impvit = random.randint(3,5),
                     agi = random.randint(3,5),
@@ -202,7 +203,7 @@ init python:
                     lck = random.randint(3,5),
                     implck = random.randint(4,6)
                     )
-            money = random.randint(6,14)
+            money = random.randint(3,6)
             new.resist.append(random.choice(["fire","ice","wind","earth","thunder","toxic"]))
             newelem = None
             while newelem in new.resist or newelem == None:
@@ -229,7 +230,7 @@ init python:
                     lck = random.randint(8,12),
                     implck = random.randint(1,6)
                     )
-            money = random.randint(80,150)
+            money = random.randint(40,80)
 
         if leveltogen is not None:
             if leveltogen == 0:
@@ -246,7 +247,7 @@ init python:
         new.name += f" {model.name}"
         new.level = 1 + leveltogen
         new.maxhp = model.hp
-        new.maxhp += round(leveltogen * model.imphp)
+        # new.maxhp += round(leveltogen * model.imphp)
         new.hp = new.maxhp
 
         new.tp = model.tp + (model.imptp * leveltogen)
@@ -258,6 +259,8 @@ init python:
         new.lck = model.lck + (leveltogen * model.implck)
         new.money = money * (leveltogen + 1)
         new.exp = 1
+        new.slist["skill"] = {"skill": [new.level, "Causes weak elemental damage to one enemy.", 4]}
+        new.slist["skillmor"] = {"skillmor": [new.level, "Causes weak elemental damage to one enemy.", 7]}
 
         enemylist.append(new)
 

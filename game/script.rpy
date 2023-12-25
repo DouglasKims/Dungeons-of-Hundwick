@@ -1,7 +1,6 @@
-﻿
+﻿define config.rollback_enabled = False # No rollback in game
 
 label start:
-
     show screen party
     show screen time
     jump town_scene
@@ -13,7 +12,7 @@ label town_scene:
     $ logtext = []
     $ logtextprint = ""
 
-    if hour >= 4:
+    if hour >= 18 or hour <=5:
         scene bg Town at scenerydark with dissolve
     else:
         scene bg Town at scenery with dissolve
@@ -77,7 +76,7 @@ label trainer_scene:
     $ newchar_element = None
 
 
-    if hour >= 4:
+    if hour >= 18 or hour <=5:
         scene bg Arena at scenerydark with dissolve
     else:
         scene bg Arena at scenery with dissolve
@@ -161,7 +160,11 @@ label manage_equip_slot_label:
     return
 
 
+label dgplayermap_label:
 
+    call screen dungeon_playermap
+
+    return
 
 label dungeon_label:
     
@@ -170,7 +173,7 @@ label dungeon_label:
     $ exploring = True
     $ danger = 0
 
-    if hour >= 4:
+    if hour >= 18 or hour <=5:
         scene bg Dungeon at scenerydark with dissolve
     else:
         scene bg Dungeon at scenery with dissolve
@@ -211,14 +214,12 @@ label combat_label:
     while in_combat:
         $ rounds += 1
 
-        python:
+        python: # Rounds code
             if not opposition: # Combat is Won
                 in_combat = False
 
             for n in initiative: # Combat Turns
-                if n not in party and n.hp <= 0:
-                    pass
-                else:
+                if n.hp > 0 and opposition:
                     logText(f"\nIt's {n.name}'s turn!")
 
                 if n in opposition and n.hp > 0: # Enemy's Turn
@@ -228,9 +229,10 @@ label combat_label:
                             tickEffect(n)
 
                     enemyTurn(n)
-                    renpy.pause(0.5)
+                    renpy.pause(1.0)
 
                     if gameover(party):
+                        renpy.pause(1.0)
                         in_combat = False
                         renpy.jump("gameover_label")
 
@@ -257,25 +259,32 @@ label combat_label:
                                 logText("Active Effects:")
                                 effect_keys = list(n.effects.keys())
                                 for effect in effect_keys:
-                                    logText(f"{effect.upper()}: boost: {(n.effects[effect][0])} / turns left: {n.effects[effect][1]}")
+                                    logText(f"{effect.upper()}: turns left: {n.effects[effect][1]}")
 
                             renpy.call_screen("combat_command")
                             renpy.pause(0.5)
+
+                endofturncleanup()
 
             if gameover(party):
                 in_combat = False
                 renpy.jump("gameover_label")
 
             endofturncleanup()
-    
+        
+        $ steps += 1
+
     hide screen initiative_screen
     hide screen combat_log
     hide screen combat_screen
     $ charinit = None
 
-    call combresults
+    $ combatCleanup()
+
+    call combresults from _call_combresults
 
     return # Returns to previous label/scene
+
 
 label combresults:
 
@@ -308,15 +317,25 @@ label levelup_label:
 
 label gameover_label:
 
+    "The whole party has perished."
+
     hide screen initiative_screen
     hide screen combat_log
     hide screen combat_screen
     hide screen combat_command
 
-    "The whole party has perished. Game Over."
+    "Game Over."
 
     scene black with dissolve
     $ renpy.block_rollback()
     call screen main_menu with dissolve
 
+
+label mapmaker_label:
+
+    screen black
+
+    call screen mapmaker_screen
+
+    jump town_scene
 ##    

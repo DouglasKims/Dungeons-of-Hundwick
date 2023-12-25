@@ -257,10 +257,13 @@ init 2 python:
         name = "Beastfolk", bonus = "+1 VIT, +1 AGI", hiddenbonus = "+1 AGI or LCK every even level",
         lore = "Animal folk are many and varied, but their animalistic features makes them more resilient and faster than most other races.") 
     r_tiefling = CharacterRace(
-        name = "Tiefling", bonus = "+2 TEC", hiddenbonus = "+1 TEC or +1 Max TP every even even level",
+        name = "Tiefling", bonus = "+2 TEC", hiddenbonus = "+1 TEC or +1 Max TP every even level",
         lore = "These humanoids with an infernal heritage have demonic features, but also higher magical resistence and a natural inclination for magical studies.")
+    r_lizardfolk = CharacterRace(
+        name = "Lizardfolk", bonus = "+1 STR, +1 TEC", hiddenbonus = "+1 TEC or +1 STR every even level",
+        lore = "These reptilian humanoids have are imposing and intimidating due to their physique, and also naturally atuned to the elements.")
 
-    character_races = [r_human,r_dwarf,r_orc,r_faefolk,r_dragonkin,r_beastfolk,r_tiefling]
+    character_races = [r_human,r_dwarf,r_orc,r_faefolk,r_dragonkin,r_beastfolk,r_tiefling,r_lizardfolk]
 
     # previously defined characters
 
@@ -289,11 +292,14 @@ init 2 python:
     party = []
     party_money = 100
 
+
+
 # RENPY FUNCITONS
 
+    exptolevel = 600 # EXP TO LEVEL UP
     def checkLevel(char):
 
-        while char.exp >= char.level*1000: # *1.5
+        while char.exp >= char.level * exptolevel: # *1.5
             levelUpChar(char)
 
     def pickClass(cname):
@@ -368,81 +374,85 @@ init 2 python:
             
             elif newchar.race == r_tiefling:
                 newchar.tec += 2
+
+            elif newchar.race == r_lizardfolk:
+                newchar.str += 1
+                newchar.tec += 1
                 
         if newchar is not None: # Extra Skills per Class
 
             if newchar.char_class == arcanist:
 
                 if newelement == "fire":
-                    newchar.slist["firo"] = global_skill_list["firo"]
+                    newchar.slist["firo"] = global_skill_list["firo"].copy()
 
                 if newelement == "ice":
-                    newchar.slist["gelo"] = global_skill_list["gelo"]
+                    newchar.slist["gelo"] = global_skill_list["gelo"].copy()
 
                 if newelement == "wind":
-                    newchar.slist["gale"] = global_skill_list["gale"]
+                    newchar.slist["gale"] = global_skill_list["gale"].copy()
 
                 if newelement == "earth":
-                    newchar.slist["tera"] = global_skill_list["tera"]
+                    newchar.slist["tera"] = global_skill_list["tera"].copy()
 
                 if newelement == "thunder":
-                    newchar.slist["volt"] = global_skill_list["volt"]
+                    newchar.slist["volt"] = global_skill_list["volt"].copy()
 
                 if newelement == "toxic":
-                    newchar.slist["veno"] = global_skill_list["veno"]
+                    newchar.slist["veno"] = global_skill_list["veno"].copy()
 
-                newchar.slist["enhate"] = global_skill_list["enhate"]
-                newchar.slist["enfete"] = global_skill_list["enfete"]
+                newchar.slist["enhate"] = global_skill_list["enhate"].copy()
+                newchar.slist["enfete"] = global_skill_list["enfete"].copy()
                 
             if newchar.char_class == thaumaturge:
                 
                 if newelement == "wind":
-                    newchar.slist["gale"] = global_skill_list["gale"]
+                    newchar.slist["gale"] = global_skill_list["gale"].copy()
 
                 if newelement == "earth":
-                    newchar.slist["tera"] = global_skill_list["tera"]
+                    newchar.slist["tera"] = global_skill_list["tera"].copy()
 
                 if newelement == "thunder":
-                    newchar.slist["volt"] = global_skill_list["volt"]
+                    newchar.slist["volt"] = global_skill_list["volt"].copy()
 
-                newchar.slist["cura"] = global_skill_list["cura"]
-                newchar.slist["revita"] = global_skill_list["revita"]
+                newchar.slist["cura"] = global_skill_list["cura"].copy()
+                newchar.slist["revita"] = global_skill_list["revita"].copy()
                 
             if newchar.char_class == herald:
 
                 if newelement == "fire":
-                    newchar.slist["firo"] = global_skill_list["firo"]
+                    newchar.slist["firo"] = global_skill_list["firo"].copy()
 
                 if newelement == "ice":
-                    newchar.slist["gelo"] = global_skill_list["gelo"]
+                    newchar.slist["gelo"] = global_skill_list["gelo"].copy()
 
                 if newelement == "wind":
-                    newchar.slist["gale"] = global_skill_list["gale"]
+                    newchar.slist["gale"] = global_skill_list["gale"].copy()
 
                 if newelement == "earth":
-                    newchar.slist["tera"] = global_skill_list["tera"]
+                    newchar.slist["tera"] = global_skill_list["tera"].copy()
 
                 if newelement == "thunder":
-                    newchar.slist["volt"] = global_skill_list["volt"]
+                    newchar.slist["volt"] = global_skill_list["volt"].copy()
 
-                newchar.slist["cura"] = global_skill_list["cura"]
-                newchar.slist["enhast"] = global_skill_list["enhast"]
+                newchar.slist["cura"] = global_skill_list["cura"].copy()
+                newchar.slist["enhast"] = global_skill_list["enhast"].copy()
 
             if newchar.char_class == knight:
 
-                newchar.slist["taunt"] = global_skill_list["taunt"]
-                newchar.slist["cleave"] = global_skill_list["cleave"]
-                newchar.slist["protect"] = global_skill_list["protect"]
+                newchar.slist["taunt"] = global_skill_list["taunt"].copy()
+                newchar.slist["cleave"] = global_skill_list["cleave"].copy()
+                newchar.slist["protect"] = global_skill_list["protect"].copy()
 
             if newchar.char_class == scout:
-                newchar.slist["sneak"] = global_skill_list["sneak"]
-                newchar.slist["hunt"] = global_skill_list["hunt"]
-                newchar.slist["decoy"] = global_skill_list["decoy"]
+                newchar.slist["sneak"] = global_skill_list["sneak"].copy()
+                newchar.slist["hunt"] = global_skill_list["hunt"].copy()
+                newchar.slist["decoy"] = global_skill_list["decoy"].copy()
 
             if newchar.char_class == quartermaster:
-                newchar.slist["appraise"] = global_skill_list["appraise"]
-                newchar.slist["bomb"] = global_skill_list["bomb"]
-                newchar.slist["coating"] = global_skill_list["coating"]
+                newchar.slist["appraise"] = global_skill_list["appraise"].copy()
+                newchar.slist["bomb"] = global_skill_list["bomb"].copy()
+                newchar.slist["coating"] = global_skill_list["coating"].copy()
 
             pass
 
@@ -459,31 +469,30 @@ init 2 python:
         global descriptor
         descriptor = ""
         skill_level = char.slist[skill][0]
-
         if skill in ("firo","tera","gelo","gale","veno","volt","nuke"):
             
             descriptor = (f"{skill.upper()} (Level: {skill_level}) is a skill that causes weak elemental damage.\n")
             if char.char_class == arcanist or char.char_class.name == "Arcanist":
-                if skill_level <2:
+                if char.slist[skill][0] <2:
                     descriptor += (f" At Level 2 you learn GRUN{skill.upper()}, which affects all enemies.\n")
-                if skill_level <3:
+                if char.slist[skill][0] <3:
                     descriptor += (f" At Level 3 you learn {skill.upper()}MOR, which causes medium elemental damage.\n")
-                if skill_level <4:
+                if char.slist[skill][0] <4:
                     descriptor += (f" At Level 4 you learn GRUN{skill.upper()}MOR, which causes medium elemental damage to all enemies.\n")
-                if skill_level <5:
+                if char.slist[skill][0] <5:
                     descriptor += (f" At Level 5 you learn {skill.upper()}MATHA, which causes heavy elemental damage.\n")
-                if skill_level <6:
+                if char.slist[skill][0] <6:
                     descriptor += (f" At Level 6 you learn GRUN{skill.upper()}MATHA, which causes heavy elemental damage to all enemies.")
             elif char.char_class == herald or char.char_class == thaumaturge or char.char_class.name == "Herald" or char.char_class.name == "Thaumaturge":
-                if skill_level <3:
+                if char.slist[skill][0] <3:
                     descriptor += (f" At Level 3 you learn GRUN{skill.upper()}, which affects all enemies.\n")
-                if skill_level <4:
+                if char.slist[skill][0] <4:
                     descriptor += (f" At Level 4 you learn {skill.upper()}MOR, which causes medium elemental damage.\n")
-                if skill_level <6:
+                if char.slist[skill][0] <6:
                     descriptor += (f" At Level 6 you learn GRUN{skill.upper()}MOR, which causes medium elemental damage to all enemies.\n")
-                if skill_level <7:
+                if char.slist[skill][0] <7:
                     descriptor += (f" At Level 7 you learn {skill.upper()}MATHA, which causes heavy elemental damage.\n")
-                if skill_level <9:
+                if char.slist[skill][0] <9:
                     descriptor += (f" At Level 9 you learn GRUN{skill.upper()}MATHA, which causes heavy elemental damage to all enemies.")
             
             
@@ -494,101 +503,114 @@ init 2 python:
 
                     if char.char_class == arcanist or char.char_class.name == "Arcanist":
                         if char.slist[skill][0] >= 2:
-                            char.slist[f"grun{skill.lower()}"] = global_skill_list[f"grun{skill}"]
+                            char.slist[f"grun{skill.lower()}"] = global_skill_list[f"grun{skill}"].copy()
+                            char.slist[f"grun{skill.lower()}"][0] = skill_level-1
                         if char.slist[skill][0] >= 3:
-                            char.slist[f"{skill.lower()}mor"] = global_skill_list[f"{skill}mor"]
+                            char.slist[f"{skill.lower()}mor"] = global_skill_list[f"{skill}mor"].copy()
+                            char.slist[f"{skill.lower()}mor"][0] = skill_level
                         if char.slist[skill][0] >= 4:
-                            char.slist[f"grun{skill.lower()}mor"] = global_skill_list[f"grun{skill}mor"]
+                            char.slist[f"grun{skill.lower()}mor"] = global_skill_list[f"grun{skill}mor"].copy()
+                            char.slist[f"grun{skill.lower()}mor"][0] = skill_level-1
                         if char.slist[skill][0] >= 5:
-                            char.slist[f"{skill.lower()}matha"] = global_skill_list[f"{skill}matha"]
+                            char.slist[f"{skill.lower()}matha"] = global_skill_list[f"{skill}matha"].copy()
+                            char.slist[f"{skill.lower()}matha"][0] = skill_level
                         if char.slist[skill][0] >= 6:
-                            char.slist[f"grun{skill.lower()}matha"] = global_skill_list[f"grun{skill}matha"]
+                            char.slist[f"grun{skill.lower()}matha"] = global_skill_list[f"grun{skill}matha"].copy()
+                            char.slist[f"grun{skill.lower()}matha"][0] = skill_level-2
 
-                    elif char.char_class == herald or char.char_class == thaumaturge or char.char_class.name == "Herald" or char.char_class.name == "Thaumaturge":
+                    if char.char_class == herald or char.char_class == thaumaturge or char.char_class.name == "Herald" or char.char_class.name == "Thaumaturge":
                         if char.slist[skill][0] >= 3:
-                            char.slist[f"grun{skill.lower()}"] = global_skill_list[f"grun{skill}"]
+                            char.slist[f"grunfiro"] = global_skill_list[f"grunfiro"].copy()
+                            char.slist[f"grun{skill.lower()}"][0] = skill_level-2
                         if char.slist[skill][0] >= 4:
-                            char.slist[f"{skill.lower()}mor"] = global_skill_list[f"{skill}mor"]
+                            char.slist[f"{skill.lower()}mor"] = global_skill_list[f"{skill}mor"].copy()
+                            char.slist[f"{skill.lower()}mor"][0] = skill_level
                         if char.slist[skill][0] >= 6:
-                            char.slist[f"grun{skill.lower()}mor"] = global_skill_list[f"grun{skill}mor"]
+                            char.slist[f"grun{skill.lower()}mor"] = global_skill_list[f"grun{skill}mor"].copy()
+                            char.slist[f"grun{skill.lower()}mor"][0] = skill_level-2
                         if char.slist[skill][0] >= 7:
-                            char.slist[f"{skill.lower()}matha"] = global_skill_list[f"{skill}matha"]
+                            char.slist[f"{skill.lower()}matha"] = global_skill_list[f"{skill}matha"].copy()
+                            char.slist[f"{skill.lower()}matha"][0] = skill_level
                         if char.slist[skill][0] >= 9:
-                            char.slist[f"grun{skill.lower()}matha"] = global_skill_list[f"grun{skill}matha"]
+                            char.slist[f"grun{skill.lower()}matha"] = global_skill_list[f"grun{skill}matha"].copy()
+                            char.slist[f"grun{skill.lower()}matha"][0] = skill_level-2
                     pass
 
 
-
-        if skill in ("cura"):
+        elif skill in ("cura"):
             
-            descriptor = (f"{skill.upper()} (Level: {skill_level}) is a skill that heals a light amount of damage.\n")
+            descriptor = (f"{skill.upper()} (Level: {skill_level}) is a skill that {global_skill_list[skill][1]}\n")
             
             if char.char_class == thaumaturge or char.char_class.name == "Thaumaturge":
-                if skill_level <2:
+                if char.slist[skill][0] <2:
                     descriptor += (f" At Level 2 you learn GRUN{skill.upper()}, which affects all allies.\n")
-                if skill_level <3:
+                if char.slist[skill][0] <3:
                     descriptor += (f" At Level 3 you learn {skill.upper()}MOR, which heals a medium amount of damage.\n")
-                if skill_level <4:
+                if char.slist[skill][0] <4:
                     descriptor += (f" At Level 4 you learn GRUN{skill.upper()}MOR, which heals a medium amount of damage to all allies.\n")
-                if skill_level <5:
+                if char.slist[skill][0] <5:
                     descriptor += (f" At Level 5 you learn {skill.upper()}MATHA, which heals a heavy amount of damage.\n")
-                if skill_level <6:
+                if char.slist[skill][0] <6:
                     descriptor += (f" At Level 6 you learn GRUN{skill.upper()}MATHA, which heals a heavy amount of damage to all allies.")
             elif char.char_class == herald or char.char_class.name == "Herald":
-                if skill_level <3:
+                if char.slist[skill][0] <3:
                     descriptor += (f" At Level 3 you learn GRUN{skill.upper()}, which affects all allies.\n")
-                if skill_level <4:
+                if char.slist[skill][0] <4:
                     descriptor += (f" At Level 4 you learn {skill.upper()}MOR, which heals a medium amount of damage.\n")
-                if skill_level <6:
+                if char.slist[skill][0] <6:
                     descriptor += (f" At Level 6 you learn GRUN{skill.upper()}MOR, which heals a medium amount of damage to all allies.\n")
-                if skill_level <7:
+                if char.slist[skill][0] <7:
                     descriptor += (f" At Level 7 you learn {skill.upper()}MATHA, which heals a heavy amount of damage.\n")
-                if skill_level <9:
+                if char.slist[skill][0] <9:
                     descriptor += (f" At Level 9 you learn GRUN{skill.upper()}MATHA, which heals a heavy amount of damage to all allies.")
             
-
             
             if choice_final == True:
                 if char.skillpts >0:
+
                     char.slist[skill][0] += 1
                     char.skillpts -= 1
 
                     if char.char_class == thaumaturge or char.char_class.name == "Thaumaturge":
                         if char.slist[skill][0] >= 2:
-                            char.slist[f"grun{skill.lower()}"] = global_skill_list[f"grun{skill}"]
+                            char.slist[f"grun{skill.lower()}"] = global_skill_list[f"grun{skill}"].copy()
                         if char.slist[skill][0] >= 3:
-                            char.slist[f"{skill.lower()}mor"] = global_skill_list[f"{skill}mor"]
+                            char.slist[f"{skill.lower()}mor"] = global_skill_list[f"{skill}mor"].copy()
                         if char.slist[skill][0] >= 4:
-                            char.slist[f"grun{skill.lower()}mor"] = global_skill_list[f"grun{skill}mor"]
+                            char.slist[f"grun{skill.lower()}mor"] = global_skill_list[f"grun{skill}mor"].copy()
                         if char.slist[skill][0] >= 5:
-                            char.slist[f"{skill.lower()}matha"] = global_skill_list[f"{skill}matha"]
+                            char.slist[f"{skill.lower()}matha"] = global_skill_list[f"{skill}matha"].copy()
                         if char.slist[skill][0] >= 6:
-                            char.slist[f"grun{skill.lower()}matha"] = global_skill_list[f"grun{skill}matha"]
+                            char.slist[f"grun{skill.lower()}matha"] = global_skill_list[f"grun{skill}matha"].copy()
 
                     elif char.char_class == herald or char.char_class.name == "Herald":
                         if char.slist[skill][0] >= 3:
-                            char.slist[f"grun{skill.lower()}"] = global_skill_list[f"grun{skill}"]
+                            char.slist[f"grun{skill.lower()}"] = global_skill_list[f"grun{skill}"].copy()
                         if char.slist[skill][0] >= 4:
-                            char.slist[f"{skill.lower()}mor"] = global_skill_list[f"{skill}mor"]
+                            char.slist[f"{skill.lower()}mor"] = global_skill_list[f"{skill}mor"].copy()
                         if char.slist[skill][0] >= 6:
-                            char.slist[f"grun{skill.lower()}mor"] = global_skill_list[f"grun{skill}mor"]
+                            char.slist[f"grun{skill.lower()}mor"] = global_skill_list[f"grun{skill}mor"].copy()
                         if char.slist[skill][0] >= 7:
-                            char.slist[f"{skill.lower()}matha"] = global_skill_list[f"{skill}matha"]
+                            char.slist[f"{skill.lower()}matha"] = global_skill_list[f"{skill}matha"].copy()
                         if char.slist[skill][0] >= 9:
-                            char.slist[f"grun{skill.lower()}matha"] = global_skill_list[f"grun{skill}matha"]
+                            char.slist[f"grun{skill.lower()}matha"] = global_skill_list[f"grun{skill}matha"].copy()
                     pass
 
 
-        if skill in ("revita"):
+        elif skill in ("revita"):
             
             descriptor = (f"{skill.upper()} (Level: {skill_level}) is a skill that revives one fallen ally with 30% of HP.\n")
             
             if char.char_class == thaumaturge or char.char_class.name == "Thaumaturge":
-                if skill_level <3:
+                if char.slist[skill][0] <2:
+                    descriptor += (f" At Level 2 the TP cost of REVITA is reduced.\n")
+                if char.slist[skill][0] <3:
                     descriptor += (f" At Level 3 you learn {skill.upper()}MOR, which revives one fallen ally with 60% of HP.\n")
-                if skill_level <5:
+                if char.slist[skill][0] <4:
+                    descriptor += (f" At Level 4 the TP cost of REVITA and REVITAMOR is reduced.\n")
+                if char.slist[skill][0] <5:
                     descriptor += (f" At Level 5 you learn {skill.upper()}MATHA, which revives one fallen ally with full HP.\n")
-                if skill_level <10:
+                if char.slist[skill][0] <10:
                     descriptor += (f" At every Level past 5 the TP cost of all REVITA skills is reduced.\n")
 
             
@@ -598,34 +620,39 @@ init 2 python:
                     char.skillpts -= 1
 
                     if char.char_class == thaumaturge or char.char_class.name == "Thaumaturge":
-                        if char.slist[skill][0] >= 3:
-                            char.slist[f"{skill.lower()}mor"] = global_skill_list[f"{skill}mor"]
-                        if char.slist[skill][0] >= 5:
-                            char.slist[f"{skill.lower()}matha"] = global_skill_list[f"{skill}matha"]
-                        if char.slist[skill][0] >= 6:
+                        if char.slist[skill][0] >= 2:
                             char.slist[f"revita"][2] = 9
+                        if char.slist[skill][0] >= 3:
+                            char.slist[f"{skill.lower()}mor"] = global_skill_list[f"{skill}mor"].copy()
+                        if char.slist[skill][0] >= 4:
+                            char.slist[f"revita"][2] = 8
                             char.slist[f"revitamor"][2] = 16
+                        if char.slist[skill][0] >= 5:
+                            char.slist[f"{skill.lower()}matha"] = global_skill_list[f"{skill}matha"].copy()
+                        if char.slist[skill][0] >= 6:
+                            char.slist[f"revita"][2] = 7
+                            char.slist[f"revitamor"][2] = 15
                             char.slist[f"revitamatha"][2] = 27
                         if char.slist[skill][0] >= 7:
-                            char.slist[f"revita"][2] = 8
-                            char.slist[f"revitamor"][2] = 14
+                            char.slist[f"revita"][2] = 6
+                            char.slist[f"revitamor"][2] = 13
                             char.slist[f"revitamatha"][2] = 24
                         if char.slist[skill][0] >= 8:
-                            char.slist[f"revita"][2] = 7
+                            char.slist[f"revita"][2] = 5
                             char.slist[f"revitamor"][2] = 12
                             char.slist[f"revitamatha"][2] = 21
                         if char.slist[skill][0] >= 9:
-                            char.slist[f"revita"][2] = 6
+                            char.slist[f"revita"][2] = 4
                             char.slist[f"revitamor"][2] = 10
                             char.slist[f"revitamatha"][2] = 18
                         if char.slist[skill][0] >= 10:
-                            char.slist[f"revita"][2] = 5
-                            char.slist[f"revitamor"][2] = 8
+                            char.slist[f"revita"][2] = 3
+                            char.slist[f"revitamor"][2] = 9
                             char.slist[f"revitamatha"][2] = 15
                     pass
 
 
-        if "enha" in skill:
+        elif "enha" in skill:
             
             descriptor = (f"{skill.upper()} (Level: {skill_level}) is a skill that {global_skill_list[skill][1]}\n")
             
@@ -678,19 +705,19 @@ init 2 python:
 
                     if char.char_class == arcanist or char.char_class.name == "Arcanist":
                         if char.slist[skill][0] >= 2:
-                            char.slist[f"grun{skill.lower()}"] = global_skill_list[f"grun{skill}"]
+                            char.slist[f"grun{skill.lower()}"] = global_skill_list[f"grun{skill}"].copy()
                         if char.slist[skill][0] >= 3:
-                            char.slist[f"enhalk"] = global_skill_list[f"enhalk"]
+                            char.slist[f"enhalk"] = global_skill_list[f"enhalk"].copy()
                         if char.slist[skill][0] >= 4:
-                            char.slist[f"grunenhalk"] = global_skill_list[f"grunenhalk"]
+                            char.slist[f"grunenhalk"] = global_skill_list[f"grunenhalk"].copy()
                         if char.slist[skill][0] >= 5:
-                            char.slist[f"enhagi"] = global_skill_list[f"enhagi"]
+                            char.slist[f"enhagi"] = global_skill_list[f"enhagi"].copy()
                         if char.slist[skill][0] >= 6:
-                            char.slist[f"grunenhagi"] = global_skill_list[f"grunenhagi"]
+                            char.slist[f"grunenhagi"] = global_skill_list[f"grunenhagi"].copy()
                         if char.slist[skill][0] >= 7:
-                            char.slist[f"enhavi"] = global_skill_list[f"enhavi"]
+                            char.slist[f"enhavi"] = global_skill_list[f"enhavi"].copy()
                         if char.slist[skill][0] >= 8:
-                            char.slist[f"grunenhavi"] = global_skill_list[f"grunenhavi"]
+                            char.slist[f"grunenhavi"] = global_skill_list[f"grunenhavi"].copy()
                         if char.slist[skill][0] >= 9:
                             char.slist[f"enhate"][2] = 5
                             char.slist[f"enhavi"][2] = 5
@@ -712,19 +739,19 @@ init 2 python:
 
                     elif char.char_class == herald or char.char_class.name == "Herald":
                         if char.slist[skill][0] >= 2:
-                            char.slist[f"grun{skill.lower()}"] = global_skill_list[f"grun{skill}"]
+                            char.slist[f"grun{skill.lower()}"] = global_skill_list[f"grun{skill}"].copy()
                         if char.slist[skill][0] >= 3:
-                            char.slist[f"enhavi"] = global_skill_list[f"enhavi"]
+                            char.slist[f"enhavi"] = global_skill_list[f"enhavi"].copy()
                         if char.slist[skill][0] >= 4:
-                            char.slist[f"grunenhavi"] = global_skill_list[f"grunenhavi"]
+                            char.slist[f"grunenhavi"] = global_skill_list[f"grunenhavi"].copy()
                         if char.slist[skill][0] >= 5:
-                            char.slist[f"enhagi"] = global_skill_list[f"enhagi"]
+                            char.slist[f"enhagi"] = global_skill_list[f"enhagi"].copy()
                         if char.slist[skill][0] >= 6:
-                            char.slist[f"grunenhagi"] = global_skill_list[f"grunenhagi"]
+                            char.slist[f"grunenhagi"] = global_skill_list[f"grunenhagi"].copy()
                         if char.slist[skill][0] >= 7:
-                            char.slist[f"enhalk"] = global_skill_list[f"enhalk"]
+                            char.slist[f"enhalk"] = global_skill_list[f"enhalk"].copy()
                         if char.slist[skill][0] >= 8:
-                            char.slist[f"grunenhalk"] = global_skill_list[f"grunenhalk"]
+                            char.slist[f"grunenhalk"] = global_skill_list[f"grunenhalk"].copy()
                         if char.slist[skill][0] >= 9:
                             char.slist[f"enhast"][2] = 5
                             char.slist[f"enhavi"][2] = 5
@@ -745,7 +772,7 @@ init 2 python:
                             char.slist[f"grunenhagi"][2] = 12
                     pass
 
-        if "enfe" in skill:
+        elif "enfe" in skill:
             
             descriptor = (f"{skill.upper()} (Level: {skill_level}) is a skill that {global_skill_list[skill][1]}\n")
             
@@ -778,27 +805,27 @@ init 2 python:
 
                     if char.char_class == arcanist or char.char_class.name == "Arcanist":
                         if char.slist[skill][0] >= 2:
-                            char.slist[f"grun{skill.lower()}"] = global_skill_list[f"grun{skill}"]
+                            char.slist[f"grun{skill.lower()}"] = global_skill_list[f"grun{skill}"].copy()
                         if char.slist[skill][0] >= 3:
-                            char.slist[f"enfelk"] = global_skill_list[f"enfelk"]
+                            char.slist[f"enfelk"] = global_skill_list[f"enfelk"].copy()
                         if char.slist[skill][0] >= 4:
-                            char.slist[f"grunenfelk"] = global_skill_list[f"grunenfelk"]
+                            char.slist[f"grunenfelk"] = global_skill_list[f"grunenfelk"].copy()
                         if char.slist[skill][0] >= 5:
-                            char.slist[f"enfevi"] = global_skill_list[f"enfevi"]
+                            char.slist[f"enfevi"] = global_skill_list[f"enfevi"].copy()
                         if char.slist[skill][0] >= 6:
-                            char.slist[f"grunenfevi"] = global_skill_list[f"grunenfevi"]
+                            char.slist[f"grunenfevi"] = global_skill_list[f"grunenfevi"].copy()
                         if char.slist[skill][0] >= 7:
-                            char.slist[f"enfegi"] = global_skill_list[f"enfegi"]
+                            char.slist[f"enfegi"] = global_skill_list[f"enfegi"].copy()
                         if char.slist[skill][0] >= 8:
-                            char.slist[f"grunenfegi"] = global_skill_list[f"grunenfegi"]
+                            char.slist[f"grunenfegi"] = global_skill_list[f"grunenfegi"].copy()
                         if char.slist[skill][0] >= 9:
-                            char.slist[f"enfest"] = global_skill_list[f"enfest"]
+                            char.slist[f"enfest"] = global_skill_list[f"enfest"].copy()
                         if char.slist[skill][0] >= 10:
-                            char.slist[f"grunenfest"] = global_skill_list[f"grunenfest"]
+                            char.slist[f"grunenfest"] = global_skill_list[f"grunenfest"].copy()
                         
                     pass
 
-        if "taunt" in skill:
+        elif "taunt" in skill:
             
             descriptor = (f"{skill.upper()} (Level: {skill_level}) is a skill that {global_skill_list[skill][1]}\n")
             
@@ -821,7 +848,7 @@ init 2 python:
                         if char.slist[skill][0] >= 9:
                             char.slist[skill][2] = 5
 
-        if "protect" in skill:
+        elif "protect" in skill:
             
             descriptor = (f"{skill.upper()} (Level: {skill_level}) is a skill that {global_skill_list[skill][1]}\n")
             
@@ -834,7 +861,7 @@ init 2 python:
                     char.slist[skill][0] += 1
                     char.skillpts -= 1
 
-        if "decoy" in skill:
+        elif "decoy" in skill:
             
             descriptor = (f"{skill.upper()} (Level: {skill_level}) is a skill that {global_skill_list[skill][1]}\n")
             
@@ -846,7 +873,7 @@ init 2 python:
                     char.slist[skill][0] += 1
                     char.skillpts -= 1
 
-        if "appraise" in skill:
+        elif "appraise" in skill:
             
             descriptor = (f"{skill.upper()} (Level: {skill_level}) is a skill that {global_skill_list[skill][1]}\n")
             
@@ -858,7 +885,7 @@ init 2 python:
                     char.slist[skill][0] += 1
                     char.skillpts -= 1
 
-        if "bomb" in skill:
+        elif "bomb" in skill:
             
             descriptor = (f"{skill.upper()} (Level: {skill_level}) is a skill that {global_skill_list[skill][1]}\n")
             
@@ -870,7 +897,7 @@ init 2 python:
                     char.slist[skill][0] += 1
                     char.skillpts -= 1
 
-        if "coating" in skill:
+        elif "coating" in skill:
             
             descriptor = (f"{skill.upper()} (Level: {skill_level}) is a skill that {global_skill_list[skill][1]}\n")
             
@@ -883,7 +910,7 @@ init 2 python:
                     char.slist[skill][0] += 1
                     char.skillpts -= 1
 
-        if "sneak" in skill:
+        elif "sneak" in skill:
             
             descriptor = (f"{skill.upper()} (Level: {skill_level}) is a skill that {global_skill_list[skill][1]}\n")
             
@@ -902,13 +929,13 @@ init 2 python:
                     if char.slist[skill][0] >= 9:
                         char.slist[skill][2] = 10
 
-        if "hunt" in skill:
+        elif "hunt" in skill:
             
             descriptor = (f"{skill.upper()} (Level: {skill_level}) is a skill that {global_skill_list[skill][1]}\n")
             
 
-            descriptor += (f" At Levels 2, 4, 6, 8, and 10, the TP cost of HUNT decreases.\n")
-            descriptor += (f" At Levels 3, 5, 7, and 9, the effects of HUNT increases.")
+            descriptor += (f" At Levels 2, 4, 6, 8, and 10, the effects of HUNT increases.\n")
+            descriptor += (f" At Levels 3, 5, 7, and 9, the TP cost of HUNT decreases.")
 
             if choice_final == True:
                 if char.skillpts >0:
@@ -927,7 +954,7 @@ init 2 python:
                     if char.slist[skill][0] >= 9:
                         char.slist[skill][2] = 10           
 
-        if "cleave" in skill:
+        elif "cleave" in skill:
             
             descriptor = (f"{skill.upper()} (Level: {skill_level}) is a skill that {char.slist[skill][1]}\n")
             
@@ -972,6 +999,8 @@ init 2 python:
 
                     char.slist[skill][2] = 4 + char.slist[skill][0] # TP cost == Skill LVL + 4
 
+        else:
+            descriptor = (f"{skill.upper()} (Level: {skill_level}) is a skill that {global_skill_list[skill][1]}\n")
 
     def expPlus():
         for char in party:
@@ -1052,9 +1081,9 @@ default drav = Character(
         "Accessory":None,
         "Charm":None},
         slist =  {
-            "cura": global_skill_list["cura"],
-            "firo": global_skill_list["firo"],
-            "enhast": global_skill_list["enhast"] })
+            "cura": global_skill_list["cura"].copy(),
+            "firo": global_skill_list["firo"].copy(),
+            "enhast": global_skill_list["enhast"].copy() })
 default dan = Character(
         name = "Thorudan", char_class= thaumaturge, race = r_faefolk,
         level=1, maxhp=60, hp=60, maxtp=60, tp=60,
@@ -1065,9 +1094,9 @@ default dan = Character(
         "Armor":armor1,
         "Accessory":None,
         "Charm":None},
-        slist = {"cura": global_skill_list["cura"],
-                "tera": global_skill_list["tera"],
-                "revita": global_skill_list["revita"]})
+        slist = {"cura": global_skill_list["cura"].copy(),
+                "tera": global_skill_list["tera"].copy(),
+                "revita": global_skill_list["revita"].copy()})
 default mars = Character(
         name = "Mars", char_class = knight, race = r_orc,
         level = 1, maxhp = 100, hp = 100, maxtp = 20, tp = 20,
@@ -1078,9 +1107,10 @@ default mars = Character(
         "Armor":armor1,
         "Accessory":None,
         "Charm":None},
-        slist = {"cleave": global_skill_list["cleave"],
-            "protect": global_skill_list["protect"],
-            "taunt": global_skill_list["taunt"]})
+        slist = {
+            "cleave": global_skill_list["cleave"].copy(),
+            "protect": global_skill_list["protect"].copy(),
+            "taunt": global_skill_list["taunt"].copy()})
 default eck = Character(
         name="Eckbert", char_class= scout, race = r_faefolk,
         level=1, maxhp=60, hp=60, maxtp=30, tp=30,
@@ -1091,12 +1121,55 @@ default eck = Character(
         "Armor":armor1,
         "Accessory":None,
         "Charm":None},
-        slist={"decoy": global_skill_list["decoy"],
-            "hunt": global_skill_list["hunt"],
-            "sneak": global_skill_list["sneak"]})
+        slist={"decoy": global_skill_list["decoy"].copy(),
+            "hunt": global_skill_list["hunt"].copy(),
+            "sneak": global_skill_list["sneak"].copy()})
+default khoy = Character(
+    name = "Khoyat", char_class = arcanist, race = r_lizardfolk,
+        level = 1, maxhp = 40, hp = 40, maxtp = 70, tp = 70,
+        str = 4, dmg = 1, tec = 9, vit = 2, agi = 5, lck = 2,
+        acted = False, defending = False, weak = [], resist = [], exp = 0, init = 0, skillpts= 0, perkpts= 0, effects={}, threat=10,
+        equip = {
+        "Weapon":weapon1,
+        "Armor":armor1,
+        "Accessory":None,
+        "Charm":None},
+        slist =  {
+            "veno": global_skill_list["veno"].copy(),
+            "enhate": global_skill_list["enhate"].copy(),
+            "enfete": global_skill_list["enfete"].copy() })
+default doekel = Character(
+    name = "Doekel", char_class = thaumaturge, race = r_dwarf,
+        level = 1, maxhp = 70, hp = 70, maxtp = 50, tp = 50,
+        str = 5, dmg = 1, tec = 6, vit = 3, agi = 3, lck = 4,
+        acted = False, defending = False, weak = [], resist = [], exp = 0, init = 0, skillpts= 0, perkpts= 0, effects={}, threat=10,
+        equip = {
+        "Weapon":weapon1,
+        "Armor":armor1,
+        "Accessory":None,
+        "Charm":None},
+        slist =  {
+            "cura": global_skill_list["cura"].copy(),
+            "revita": global_skill_list["revita"].copy(),
+            "volt": global_skill_list["volt"].copy() })
+default okebur = Character(
+    name = "Okebur", char_class = quartermaster, race = r_beastfolk,
+        level = 1, maxhp = 60, hp = 60, maxtp = 30, tp = 30,
+        str = 5, dmg = 1, tec = 1, vit = 6, agi = 7, lck = 5,
+        acted = False, defending = False, weak = [], resist = [], exp = 0, init = 0, skillpts= 0, perkpts= 0, effects={}, threat=10,
+        equip = {
+        "Weapon":weapon1,
+        "Armor":armor1,
+        "Accessory":None,
+        "Charm":None},
+        slist =  {
+            "appraise": global_skill_list["appraise"].copy(),
+            "bomb": global_skill_list["bomb"].copy(),
+            "coating": global_skill_list["coating"].copy() })
 
-default character_roster = []
-default party = [drav,dan,mars,eck]
+
+default character_roster = [khoy,okebur]
+default party = [drav, dan, mars, eck]
 default party_money = 100
 
 # default chartolevel = None
