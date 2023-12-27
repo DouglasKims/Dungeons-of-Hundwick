@@ -466,7 +466,7 @@ screen shop:
     showif shop_command == "Buy":
         frame:
             # xsize 1420
-            xsize 1320
+            xsize 1350
             xpos 535
             ysize 800
             # xpos 485
@@ -515,57 +515,60 @@ screen shop:
                     xoffset 50
                     ypos 30
 
-                    vbox:
-                        null height 20
-                        for item in shop_stock:
-                            if item.type == shop_type:
-                                fixed:
-                                    ysize 100
-                                    text item.name xpos 20 size 25 xsize 200
-                                    text item.lore xpos 220 size 20 xsize 580
-                                    # text str(item.value) xpos 850 size 25
-                                    frame:
-                                        xpos 820 
-                                        textbutton f"Buy {item.value} Cr" text_size 25:
-                                            if party_money >= item.value and len(inventory) < inventorylimt:
-                                                action Function(buyItem,item,"Equip")
-                                    if item.type == "Weapon":
-                                        text "STR: " + str(item.str) size 25 xpos 220 ypos 60
-                                        text "DMG: " + str(item.dmg) size 25 xpos 320 ypos 60
-                                        text "TEC: " + str(item.tec) size 25 xpos 420 ypos 60
-                                    if item.type == "Armor":
-                                        text "VIT: " + str(item.vit) size 25 xpos 220 ypos 60
-                                        text "AGI: " + str(item.agi) size 25 xpos 320 ypos 60
-                                        text "LCK: " + str(item.lck) size 25 xpos 420 ypos 60
-                                    if item.type == "Accessory" or item.type == "Charm":
-                                        text "STR: " + str(item.str) size 25 xpos 220 ypos 60
-                                        text "DMG: " + str(item.dmg) size 25 xpos 320 ypos 60
-                                        text "TEC: " + str(item.tec) size 25 xpos 420 ypos 60
-                                        text "VIT: " + str(item.vit) size 25 xpos 520 ypos 60
-                                        text "AGI: " + str(item.agi) size 25 xpos 620 ypos 60
-                                        text "LCK: " + str(item.lck) size 25 xpos 720 ypos 60
-                                        if item.resist != None:
-                                            text "RES.: " + " ".join(item.resist).title() size 25 xpos 820 ypos 60
+                    viewport id "shopbuy":
+                        mousewheel True
 
-                            if shop_type == "Consumables":
-                                if item.type not in ("Weapon","Armor","Accessory","Charm"):
+                        vbox:
+                            null height 20
+                            for item in shop_stock:
+                                if item.type == shop_type:
                                     fixed:
-                                        ysize 80
+                                        ysize 100
                                         text item.name xpos 20 size 25 xsize 200
                                         text item.lore xpos 220 size 20 xsize 580
                                         # text str(item.value) xpos 850 size 25
                                         frame:
                                             xpos 820 
                                             textbutton f"Buy {item.value} Cr" text_size 25:
-                                                if party_money >= item.value and len(consumables) < consumableslimit:
-                                                    action Function(buyItem,item,"Consumable")
+                                                if party_money >= item.value and len(inventory) < inventorylimt:
+                                                    action Function(buyItem,item,"Equip")
+                                        if item.type == "Weapon":
+                                            text "STR: " + str(item.str) size 25 xpos 220 ypos 60
+                                            text "DMG: " + str(item.dmg) size 25 xpos 320 ypos 60
+                                            text "TEC: " + str(item.tec) size 25 xpos 420 ypos 60
+                                        if item.type == "Armor":
+                                            text "VIT: " + str(item.vit) size 25 xpos 220 ypos 60
+                                            text "AGI: " + str(item.agi) size 25 xpos 320 ypos 60
+                                            text "LCK: " + str(item.lck) size 25 xpos 420 ypos 60
+                                        if item.type == "Accessory" or item.type == "Charm":
+                                            text "STR: " + str(item.str) size 25 xpos 220 ypos 60
+                                            text "DMG: " + str(item.dmg) size 25 xpos 320 ypos 60
+                                            text "TEC: " + str(item.tec) size 25 xpos 420 ypos 60
+                                            text "VIT: " + str(item.vit) size 25 xpos 520 ypos 60
+                                            text "AGI: " + str(item.agi) size 25 xpos 620 ypos 60
+                                            text "LCK: " + str(item.lck) size 25 xpos 720 ypos 60
+                                            if item.resist != None:
+                                                text "RES.: " + " ".join(item.resist).title() size 25 xpos 820 ypos 60
 
+                                if shop_type == "Consumables":
+                                    if item.type not in ("Weapon","Armor","Accessory","Charm"):
+                                        fixed:
+                                            ysize 80
+                                            text item.name xpos 20 size 25 xsize 200
+                                            text item.lore xpos 220 size 20 xsize 580
+                                            # text str(item.value) xpos 850 size 25
+                                            frame:
+                                                xpos 820 
+                                                textbutton f"Buy {item.value} Cr" text_size 25:
+                                                    if party_money >= item.value and len(consumables) < consumableslimit:
+                                                        action Function(buyItem,item,"Consumable")
+                    vbar value YScrollValue("shopbuy") xalign 1.0 xoffset 30
 
 
     showif shop_command == "Sell":
         frame:
             # xsize 1420
-            xsize 1320
+            xsize 1350
             xpos 535
             ysize 800
             # xpos 485
@@ -614,48 +617,52 @@ screen shop:
                     xoffset 50
                     ypos 30
 
-                    vbox:
-                        null height 20
-                        for item in inventory:
-                            if item.type == shop_type:
-                                fixed:
-                                    ysize 100
-                                    text item.name xpos 20 size 25 xsize 200
-                                    text item.lore xpos 220 size 20 xsize 580
-                                    # text str(item.value) xpos 850 size 25
-                                    frame:
-                                        xpos 820 
-                                        textbutton f"Sell {item.value//2} Cr" text_size 25:
-                                            action Function(sellItem,item,"Equip")
-                                    if item.type == "Weapon":
-                                        text "STR: " + str(item.str) size 25 xpos 220 ypos 60
-                                        text "DMG: " + str(item.dmg) size 25 xpos 320 ypos 60
-                                        text "TEC: " + str(item.tec) size 25 xpos 420 ypos 60
-                                    if item.type == "Armor":
-                                        text "VIT: " + str(item.vit) size 25 xpos 220 ypos 60
-                                        text "AGI: " + str(item.agi) size 25 xpos 320 ypos 60
-                                        text "LCK: " + str(item.lck) size 25 xpos 420 ypos 60
-                                    if item.type == "Accessory" or item.type == "Charm":
-                                        text "STR: " + str(item.str) size 25 xpos 220 ypos 60
-                                        text "DMG: " + str(item.dmg) size 25 xpos 320 ypos 60
-                                        text "TEC: " + str(item.tec) size 25 xpos 420 ypos 60
-                                        text "VIT: " + str(item.vit) size 25 xpos 520 ypos 60
-                                        text "AGI: " + str(item.agi) size 25 xpos 620 ypos 60
-                                        text "LCK: " + str(item.lck) size 25 xpos 720 ypos 60
-                                        if item.resist != None:
-                                            text "RES.: " + " ".join(item.resist).title() size 25 xpos 820 ypos 60
-                        for item in consumables:
-                            if shop_type == "Consumables":
-                                if item.type not in ("Weapon","Armor","Accessory","Charm"):
+                    viewport id "shopsell":
+                        mousewheel True
+
+                        vbox:
+                            null height 20
+                            for item in inventory:
+                                if item.type == shop_type:
                                     fixed:
-                                        ysize 80
+                                        ysize 100
                                         text item.name xpos 20 size 25 xsize 200
                                         text item.lore xpos 220 size 20 xsize 580
                                         # text str(item.value) xpos 850 size 25
                                         frame:
                                             xpos 820 
                                             textbutton f"Sell {item.value//2} Cr" text_size 25:
-                                                action Function(sellItem,item,"Consumable")
+                                                action Function(sellItem,item,"Equip")
+                                        if item.type == "Weapon":
+                                            text "STR: " + str(item.str) size 25 xpos 220 ypos 60
+                                            text "DMG: " + str(item.dmg) size 25 xpos 320 ypos 60
+                                            text "TEC: " + str(item.tec) size 25 xpos 420 ypos 60
+                                        if item.type == "Armor":
+                                            text "VIT: " + str(item.vit) size 25 xpos 220 ypos 60
+                                            text "AGI: " + str(item.agi) size 25 xpos 320 ypos 60
+                                            text "LCK: " + str(item.lck) size 25 xpos 420 ypos 60
+                                        if item.type == "Accessory" or item.type == "Charm":
+                                            text "STR: " + str(item.str) size 25 xpos 220 ypos 60
+                                            text "DMG: " + str(item.dmg) size 25 xpos 320 ypos 60
+                                            text "TEC: " + str(item.tec) size 25 xpos 420 ypos 60
+                                            text "VIT: " + str(item.vit) size 25 xpos 520 ypos 60
+                                            text "AGI: " + str(item.agi) size 25 xpos 620 ypos 60
+                                            text "LCK: " + str(item.lck) size 25 xpos 720 ypos 60
+                                            if item.resist != None:
+                                                text "RES.: " + " ".join(item.resist).title() size 25 xpos 820 ypos 60
+                            for item in consumables:
+                                if shop_type == "Consumables":
+                                    if item.type not in ("Weapon","Armor","Accessory","Charm"):
+                                        fixed:
+                                            ysize 80
+                                            text item.name xpos 20 size 25 xsize 200
+                                            text item.lore xpos 220 size 20 xsize 580
+                                            # text str(item.value) xpos 850 size 25
+                                            frame:
+                                                xpos 820 
+                                                textbutton f"Sell {item.value//2} Cr" text_size 25:
+                                                    action Function(sellItem,item,"Consumable")
+                    vbar value YScrollValue("shopsell") xalign 1.0 xoffset 30
 
 screen merchant:
     zorder 1
@@ -769,7 +776,7 @@ screen merchant:
                                     frame:
                                         xpos 820 
                                         textbutton f"Buy {item.value*5} Cr" text_size 25:
-                                            if party_money >= item.value and len(inventory) < inventorylimt:
+                                            if party_money >= (item.value*5) and len(inventory) < inventorylimt:
                                                 action Function(buyItem,item,"Equip")
                                     if item.type == "Weapon":
                                         text "STR: " + str(item.str) size 25 xpos 220 ypos 60
@@ -799,7 +806,7 @@ screen merchant:
                                         frame:
                                             xpos 820 
                                             textbutton f"Buy {item.value*5} Cr" text_size 25:
-                                                if party_money >= item.value and len(consumables) < consumableslimit:
+                                                if party_money >= item.value*5 and len(consumables) < consumableslimit:
                                                     action Function(buyItemMerch,item,"Consumable")
 
 
@@ -2008,7 +2015,7 @@ screen manageSkills:
                                     xsize 900
                                     ysize 80
                                     if any(substring in sk for substring in ["grun", "mor", "matha", "enhavi", "enhagi", "enhalk", "enfest","enfevi","enfegi","enfelk"]):
-                                        if "cura" in sk:
+                                        if "cura" in sk or "revita" in sk:
                                             textbutton sk.upper():
                                                 text_size 25
                                                 action SetVariable("selected_skill", sk), Function(levelUpSkill_Check, selected_character, sk, False)
@@ -2053,7 +2060,7 @@ screen manageSkills:
                     ypos 500
                     xpos 10
                     if selected_skill != None:
-                        showif "cura" in selected_skill or "revita" in selected_skill:
+                        showif char.hp > 0 and any(substring in selected_skill for substring in ["cura", "revita"]):
                             frame:
                                 textbutton f"Use Skill ({str(char.slist[selected_skill][2])} TP)":
                                     text_size 30
@@ -2062,9 +2069,7 @@ screen manageSkills:
                                     else:
                                         action Function(skillCommand, char, selected_skill, None)
 
-                # if selected_skill != None and any(substring in selected_skill for substring in ["grun", "mor", "matha", "enhavi", "enhagi", "enhalk", "enfest","enfevi","enfegi","enfelk"]):
-                #     pass
-                # else:
+
                 fixed: # Level up skill buttons
                     ypos 500
                     xpos 450
@@ -2081,7 +2086,7 @@ screen manageSkills:
                             elif selected_character.slist[selected_skill][0] >= 10:
                                 textbutton "Maxed" text_size 30
                             else:
-                                textbutton "No SP" text_size 30
+                                textbutton "---" text_size 30
                     frame:
                         xpos 400
                         xanchor 0.5
@@ -2549,8 +2554,9 @@ screen initiative_screen:
             hbox:
                 box_wrap True
                 for char in initiative:
-                    if char in opposition:
-                        text char.name + ", " color "#FA0" size 25
+                    if char not in party:
+                        if char.hp > 0:
+                            text char.name + ", " color "#FA0" size 25
                     else:
                         if char == charinit:
                             text char.name + ", " color "#7070b9" size 25
@@ -2565,7 +2571,7 @@ screen combat_screen:
         xsize 1420
         ysize 780
         xalign 1.0
-        # background None
+        background None
 
         hbox:
             yalign 0.7

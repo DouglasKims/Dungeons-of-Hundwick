@@ -4,10 +4,14 @@
 
 # PERKS
     # Every 5/10(?) levels, characters get access to new spell level/type
+
+    # Allow classes to get any skills
+
+    # Implement Leveling tools (to alleviate grind)
     
 # DUNGEON CRAWLER PART
     # Try to implement a random dungeon generator?
-    # DUNGEON Maker tool in Ren'py
+    # DUNGEON Maker tool in Ren'py (DONE)
 
     # Field Bosses (REDO)
         # To do this, the code needs a "fieldmap" that contains the whole dungeon, but shows only where the group is at, at a 3x3/5x5 grid around the party. (doable, but requires big rewrite, however, allows for Field bosses)
@@ -18,6 +22,12 @@
         # Implement enemy difficulty by floor (as well as party level)
     # Implement Rest Area (DONE)
     # Implement Merchant (DONE)
+
+    # Implement Traps and Puzzles
+
+    # More unique enemy types
+
+    # Have different, unconnected dungeons of different types (forest, cave, etc.)
 
 
 # IMPLEMENT CITY (& QUESTS?)
@@ -36,7 +46,7 @@
     # create buff, debuff skills (DONE)
 
     # Enemy Generator? (DONE)
-    # Fix formulas (DONE)
+    # Fix formulas (DONE) (Do AGAIN)
 
 # CLASS SKILLS
     # KNIGHT

@@ -10,6 +10,17 @@ transform scenerydark:
     xpos -1000
     easein 2.0 xpos -500
 
+transform blur:
+    easein 1.0 blur 5.0 matrixcolor TintMatrix("#1e1f20")
+
+transform unblur:
+    blur 5.0
+    easein 2.0 blur 0.0 matrixcolor TintMatrix("#ffffff00")
+
+transform unblurdark:
+    blur 5.0
+    easein 2.0 blur 0.0 matrixcolor TintMatrix("#334477")
+
 image bg Town:
     "BG/Hundwick.webp"
     zoom 1.20

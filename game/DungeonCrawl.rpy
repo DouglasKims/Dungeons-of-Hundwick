@@ -263,7 +263,7 @@ init 5 python:
         danger += random.randint(1,6)
 
         if danger >= 100:
-                logText("Enemies have appeared!")
+                # logText("Enemies have appeared!")
                 danger = 0
                 renpy.call("combat_label")
                 danger_level = f"None"

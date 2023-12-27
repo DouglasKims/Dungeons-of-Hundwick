@@ -492,7 +492,8 @@ init 3 python:
         for n in party:
             plevel += n.level
 
-        plevel = round(plevel / len(party))
+        # plevel = round(plevel / len(party))
+        plevel = plevel / len(party)
         return plevel
         
     def calcenemyexp(enemy):
@@ -629,12 +630,12 @@ init 3 python:
 
             if not opposition:
                 entype = random.choice(["Malla","Sgeu","Diogh","Colt","Adhbah","Grain"])
-                opposition.append(generateEnemy(entype,partyLevel()))
+                opposition.append(generateEnemy(entype,int(partyLevel())))
                 
         
         else:
             logText("A Làidir has appeared!")
-            opposition.append(generateEnemy("Laidir",partyLevel()))
+            opposition.append(generateEnemy("Laidir",int(partyLevel())))
 
         bossbattle = False
 

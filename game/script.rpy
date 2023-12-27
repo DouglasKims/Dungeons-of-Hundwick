@@ -90,7 +90,8 @@ label trainer_scene:
 
 label party_menu_scene:
 
-    call screen partymenu with dissolve
+    # call screen partymenu with dissolve
+    call screen partymenu
     return
     
 label manage_equip_label:
@@ -188,6 +189,7 @@ label dungeon_label:
     jump dungeon_label.screen
 
 default charinit = None
+default in_combat = False
 label combat_label:
 
     # scene transition for battle
@@ -200,6 +202,8 @@ label combat_label:
     $ selected_character = None
     $ selected_skill = None
 
+    show bg at blur
+
     hide screen dungeon_danger
     hide screen dungeon_explore
     show screen initiative_screen
@@ -207,7 +211,7 @@ label combat_label:
     show screen combat_screen
     # call screen combat_command
 
-    $ logText("Enemies have appeared!")
+    $ logText("\nEnemies have appeared!")
     pause(1.0)
 
     $ rounds = 0
@@ -264,7 +268,7 @@ label combat_label:
                             renpy.call_screen("combat_command")
                             renpy.pause(0.5)
 
-                endofturncleanup()
+                # endofturncleanup()
 
             if gameover(party):
                 in_combat = False
@@ -278,6 +282,11 @@ label combat_label:
     hide screen combat_log
     hide screen combat_screen
     $ charinit = None
+
+    if hour >= 18 or hour <=5:
+        show bg at unblurdark
+    else:
+        show bg at unblur
 
     $ combatCleanup()
 
