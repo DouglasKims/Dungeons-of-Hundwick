@@ -55,68 +55,56 @@ init 3 python:
         return atkmod
 
     def rolldamage(char):
-        global atk_report
-        rolleddamage = 0
-        # for _ in range(int(char.str)):
-        #     if char.dmg == 1:
-        #         rolleddamage += random.randint(1,4) # 1d4 / AVG 2,5
-        #     elif char.dmg == 2:
-        #         rolleddamage += random.randint(1,6) # 1d6 / AVG 3,5
-        #     elif char.dmg == 3:
-        #         rolleddamage += random.randint(1,8) # 1d8 / AVG 4,5
-        #     elif char.dmg == 4:
-        #         rolleddamage += random.randint(2,12) # 2d6 / AVG 7
-        #     elif char.dmg == 5:
-        #         rolleddamage += random.randint(2,16) # 2d8 / AVG 9
-        #     elif char.dmg == 6:
-        #         rolleddamage += random.randint(2,20) # 2d10 / AVG 11
-        #     elif char.dmg == 7:
-        #         rolleddamage += random.randint(3,24) # 3d8 / AVG 13,5
-        #     elif char.dmg == 8:
-        #         rolleddamage += random.randint(3,30) # 3d10 / AVG 16,5
-        #     elif char.dmg == 9:
-        #         rolleddamage += random.randint(3,36) # 3d12 / AVG 19,5
-        #     elif char.dmg >= 10:
-        #         rolleddamage += random.randint(4,40) # 4d10 / AVG 22
+        # global atk_report
+        # rolleddamage = 0
 
-        if char.dmg <= 1:
-            rolleddamage = char.str * 2.5 # 1d4 / AVG 2,5
-        elif char.dmg <= 2:
-            rolleddamage = char.str * 3.5  # 1d6 / AVG 3,5
-        elif char.dmg <= 3:
-            rolleddamage = char.str * 4.5  # 1d8 / AVG 4,5
-        elif char.dmg <= 4:
-            rolleddamage = char.str * 7  # 2d6 / AVG 7
-        elif char.dmg <= 5:
-            rolleddamage = char.str * 9  # 2d8 / AVG 9
-        elif char.dmg <= 6:
-            rolleddamage = char.str * 11  # 2d10 / AVG 11
-        elif char.dmg <= 7:
-            rolleddamage = char.str * 13.5  # 3d8 / AVG 13,5
-        elif char.dmg <= 8:
-            rolleddamage = char.str * 16.5  # 3d10 / AVG 16,5
-        elif char.dmg <= 9:
-            rolleddamage = char.str * 9.5  # 3d12 / AVG 19,5
-        elif char.dmg >= 10:
-            rolleddamage = char.str * 22  # 4d10 / AVG 22
+        # if char.dmg <= 1:
+        #     rolleddamage = char.str * 2.5 # 1d4 / AVG 2,5
+        # elif char.dmg <= 2:
+        #     rolleddamage = char.str * 3.5  # 1d6 / AVG 3,5
+        # elif char.dmg <= 3:
+        #     rolleddamage = char.str * 4.5  # 1d8 / AVG 4,5
+        # elif char.dmg <= 4:
+        #     rolleddamage = char.str * 7  # 2d6 / AVG 7
+        # elif char.dmg <= 5:
+        #     rolleddamage = char.str * 9  # 2d8 / AVG 9
+        # elif char.dmg <= 6:
+        #     rolleddamage = char.str * 11  # 2d10 / AVG 11
+        # elif char.dmg <= 7:
+        #     rolleddamage = char.str * 13.5  # 3d8 / AVG 13,5
+        # elif char.dmg <= 8:
+        #     rolleddamage = char.str * 16.5  # 3d10 / AVG 16,5
+        # elif char.dmg <= 9:
+        #     rolleddamage = char.str * 9.5  # 3d12 / AVG 19,5
+        # elif char.dmg >= 10:
+        #     rolleddamage = char.str * 22  # 4d10 / AVG 22
 
+        # atk_report += f"Rolled dmg {rolleddamage}, "
 
-        rolleddamage = rolleddamage
-        atk_report += f"Rolled dmg {rolleddamage}, "
+        basephyspower = 25
+        rolleddamage = (char.str * 2) + basephyspower # Base Phys power
+
         return rolleddamage
 
     def attackfunc(attacker,target):
         global opptoremove
-        global atk_report
-        atk_report = ""
+        # global atk_report
+        # atk_report = ""
         rollattack(attacker,target)
 
-        atk_report += f"Attacker STR: {attacker.str} (Sqrd. {round(math.sqrt(attacker.str))}), "
-        atk_report += f"Defender VIT {target.vit} (Sqrd. {abs(round(math.sqrt(target.vit)/10-1))}), "
+        # atk_report += f"Attacker STR: {attacker.str} (Sqrd. {round(math.sqrt(attacker.str))}), "
+        # atk_report += f"Defender VIT {target.vit} (Sqrd. {abs(round(math.sqrt(target.vit)/10-1))}), "
 
-        finaldamage = round((((rolldamage(attacker)) * atkmod) * (math.sqrt(attacker.str)/10+1) + attacker.str) * abs(math.sqrt(target.vit)/10-1))
+        # finaldamage = round((((rolldamage(attacker)) * atkmod) * (math.sqrt(attacker.str)/10+1) + attacker.str) * abs(math.sqrt(target.vit)/10-1))
+
+        finaldamage = round((((rolldamage(attacker)) * atkmod) * (math.sqrt(attacker.str)/10+1)) * abs(math.sqrt(target.vit)/10-1)) # DNG without adding STR again
         
-        atk_report += f"\nFinal calc'd damaged: {finaldamage} dealt by {attacker.name}."
+        # atk_report += f"\nFinal calc'd damaged: {finaldamage} dealt by {attacker.name}."
+
+        # Random +- 10% variation in damage
+        damagevariation = (random.randint(-10,10)/100)+1
+        finaldamage = int(finaldamage * damagevariation)
+
 
         if miss == True:
             finaldamage = 0
@@ -167,19 +155,6 @@ init 3 python:
             cancast = True
         return cancast
 
-    def calcspelldamageOLD(char,spelllevel):
-        global spelldamage
-        spelldamage = 0
-        if spelllevel == "weak":
-            for _ in range(int(char.tec)):
-                spelldamage += random.randint(2,4) # 2d2 / AVG 3
-        elif spelllevel == "medium":
-            for _ in range(int(char.tec)):
-                spelldamage += random.randint(4,8) # 4d2 / AVG 6
-        elif spelllevel == "heavy":
-            for _ in range(int(char.tec)):
-                spelldamage += random.randint(6,12) # 6d2 / AVG 9
-
     def calcspelldamage(char, skill):
         global spelldamage
         spelldamage = 0
@@ -207,6 +182,8 @@ init 3 python:
             else:
                 spelldamage = 35 + ( skilllevel * 5 )
 
+        spelldamage += (char.tec * 2)
+
     def calcspellheal(char,spelllevel):
         spellheal = 0
         if spelllevel == "weak":
@@ -218,157 +195,6 @@ init 3 python:
             spellheal = 100 * ( char.tec * 4)
 
         return spellheal
-
-    def spellversion(char,spell):
-        starget = None
-        dmgtype = ""
-
-        if "firo" in spell:
-            dmgtype = "fire"
-        elif "gelo" in spell:
-            dmgtype = "ice"
-        elif "gale" in spell:
-            dmgtype = "wind"
-        elif "tera" in spell:
-            dmgtype = "earth"
-        elif "volt" in spell:
-            dmgtype = "thunder"
-        elif "veno" in spell:
-            dmgtype = "toxic"
-        elif "nuke" in spell:
-            dmgtype = chaos
-
-        if "cura" not in spell and "revita" not in spell and any(element in spell for element in ["firo", "gelo", "gale", "tera", "volt", "veno", "nuke"]):
-
-            if "mor" in spell and spell in char.slist:
-                if "grun" in spell and spell in char.slist:
-                    if usetp(char,char.slist[spell][2]) == True:
-                        calcspelldamage(char,"medium")
-                        usespell(char,starget,dmgtype,"multi")
-
-                elif spell in char.slist:
-                    if usetp(char,char.slist[spell][2]) == True:
-                        starget = targetenemy()
-                        if starget is not None:
-                            calcspelldamage(char,"medium")
-                            usespell(char,starget,dmgtype,"single")
-
-
-            elif "matha" in spell and spell in char.slist:
-                if "grun" in spell and "grun" in char.slist:
-                    if usetp(char,char.slist[spell][2]) == True:
-                        calcspelldamage(char,"heavy")
-                        usespell(char,starget,dmgtype,"multi")
-
-                elif spell in char.slist:
-                    if usetp(char,char.slist[spell][2]) == True:
-                        starget = targetenemy()
-                        if starget is not None:
-                            calcspelldamage(char,"heavy")
-                            usespell(char,starget,dmgtype,"single")
-
-            elif "mor" not in spell and "matha" not in spell and "cura" not in spell:
-                if "grun" in spell and spell in char.slist:
-                    if usetp(char,char.slist[spell][2]) == True:
-                        calcspelldamage(char,"weak")
-                        usespell(char,starget,dmgtype,"multi")
-
-
-                elif spell in char.slist:
-                    if usetp(char,char.slist[spell][2]) == True:
-                        starget = targetenemy()
-                        if starget is not None:
-                            calcspelldamage(char,"weak")
-                            usespell(char,starget,dmgtype,"single")
-
-
-        elif "cura" in spell:
-            if "cura" in spell and "mor" in spell:
-                if "grun" in spell and spell in char.slist:
-                    if usetp(char,char.slist[spell][2]) == True:
-                        heal = calcspellheal(char,"medium")
-                        for n in party:
-                            # healally function
-                            healally(char,n,heal)
-
-
-                else:
-                    if usetp(char,char.slist[spell][2]) == True:
-                        starget = targetally()
-                        if starget is not None:
-                            heal = calcspellheal(char,"medium")
-                            healally(char,starget,heal)
-                pass
-
-            elif "cura" in spell and "matha" in spell:
-                if "grun" in spell and spell in char.slist:
-                    if usetp(char,char.slist[spell][2]) == True:
-                        heal = calcspellheal(char,"heavy")
-                        for n in party:
-                            # healally function
-                            healally(char,n,heal)
-
-
-                else:
-                    if usetp(char,char.slist[spell][2]) == True:
-                        starget = targetally()
-                        if starget is not None:
-                            heal = calcspellheal(char,"heavy")
-                            healally(char,starget,heal)
-                pass
-
-            elif "cura" in spell:
-                if "grun" in spell and spell in char.slist:
-                    if usetp(char,char.slist[spell][2]) == True:
-                        heal = calcspellheal(char,"weak")
-                        for n in party:
-                            # healally function
-                            healally(char,n,heal)
-
-
-                else:
-                    if usetp(char,char.slist[spell][2]) == True:
-                        starget = targetally()
-                        if starget is not None:
-                            heal = calcspellheal(char,"weak")
-                            healally(char,starget,heal)
-
-
-        elif "revita" in spell:
-            
-            if "revita" in spell and "mor" not in spell and "motha" not in spell:
-                if spell in char.slist:
-                    
-                    if usetp(char,char.slist[spell][2]) == True:
-                        starget = targetdeadally()
-                        if starget is not None:
-                            starget.hp += round((starget.maxhp*30/100))
-
-                            logText (f"{starget.name} has been revived with {round(starget.maxhp*30/100)} HP!")
-                            char.acted = True
-
-            elif "revita" in spell and "mor" in spell:
-                if spell in char.slist:
-
-                    if usetp(char,char.slist[spell][2]) == True:
-                        starget = targetdeadally()
-                        if starget is not None:
-                            starget.hp += round((starget.maxhp*60/100))
-
-                            logText (f"{starget.name} has been revived with {round(starget.maxhp*60/100)} HP!")
-                            char.acted = True
-
-            elif "revita" in spell and "motha" in spell:
-                
-                if spell in char.slist:
-                    if usetp(char,char.slist[spell][2]) == True:
-                        starget = targetdeadally()
-                        if starget is not None:
-                            starget.hp = round((starget.maxhp))
-
-                            logText (f"{starget.name} has been revived with full HP!")
-                            char.acted = True
-
 
 
 
@@ -437,13 +263,17 @@ init 3 python:
 
         # Reduce target's TEC from damage
             # (SQRT(TEC) - 1)*-1
-        spelldamage = abs(round(spelldamage * (math.sqrt(char.tec)/10+1) * ((math.sqrt(starget.tec)/10-1))))
+        targetdmgreduction = abs((math.sqrt(starget.tec) + math.sqrt(starget.vit))/20-1)
+        # spelldamage = abs(round(spelldamage * (math.sqrt(char.tec)/10+1) * ((math.sqrt(starget.tec)/10-1))))
+        spelldamage = round(spelldamage * (math.sqrt(char.tec)/10+1) * targetdmgreduction)
+
+        # Random +- 10% variation in damage
+        damagevariation = (random.randint(-10,10)/100)+1
+        spelldamage = int(spelldamage * damagevariation)
 
         # LCK to evade spell
         sd100 = random.randint(1,100)
-        
-
-        if sd100 <= math.sqrt(starget.lck)/100:
+        if sd100 <= math.sqrt(starget.lck)/10:
             logText (f"{starget.name} managed to avoid the attack!")
 
         else:
@@ -917,7 +747,7 @@ init 3 python:
 
                             logText (f"{target.name} has been revived with full HP!")
                             char.acted = True
-
+    
     def skillCommandPhys(char, charcommand, target):
 
         if "charge" in charcommand:
@@ -949,11 +779,14 @@ init 3 python:
 
                 for _ in range(attacktimes):
                     if opposition:
+                        # target = random.choice(opposition)
+                        # attackfunc(char,target)
                         target = random.choice(opposition)
                         attackfunc(char,target)
+                        # renpy.pause(1.5)
 
 
-                        char.acted = True
+                char.acted = True
 
         elif "hunt" in charcommand:
             if usetp(char,char.slist[charcommand][2]) == True:
@@ -1089,6 +922,10 @@ init 3 python:
                 target.exp += 0.25 * char.slist["appraise"][0]
                 logText(f"{char.name} has appraised {target.name}'s potential.")
                 char.acted = True
+
+
+# RENPY LABELS
+
 
 
 # RENPY DEFAULTS

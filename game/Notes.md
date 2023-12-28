@@ -2,41 +2,38 @@
 # PROJECT OVERALL
     # Create a file just for characters and classes (DONE)
 
+    # Separate game screens into more files
+
 # PERKS
     # Every 5/10(?) levels, characters get access to new spell level/type
 
     # Allow classes to get any skills
-
     # Implement Leveling tools (to alleviate grind)
     
 # DUNGEON CRAWLER PART
-    # Try to implement a random dungeon generator?
     # DUNGEON Maker tool in Ren'py (DONE)
+    # Implement Doors and Objects (chests/treasure) (DONE)
+    # Implement Rest Area (DONE)
+    # Implement Merchant (DONE)
 
     # Field Bosses (REDO)
         # To do this, the code needs a "fieldmap" that contains the whole dungeon, but shows only where the group is at, at a 3x3/5x5 grid around the party. (doable, but requires big rewrite, however, allows for Field bosses)
 
-    # Implement Doors and Objects (chests/treasure) (DONE)
     # Implement Stairs down
         # Implement more floors
         # Implement enemy difficulty by floor (as well as party level)
-    # Implement Rest Area (DONE)
-    # Implement Merchant (DONE)
-
+    # Try to implement a random dungeon generator?
     # Implement Traps and Puzzles
-
     # More unique enemy types
-
     # Have different, unconnected dungeons of different types (forest, cave, etc.)
-
 
 # IMPLEMENT CITY (& QUESTS?)
     # City Tavern (DONE)
     # City Shop (DONE)
     # City Trainer (DONE) // Missing Perks 
+
     # Implement Quests / Goals
     # Implement random conversations / Lore Drop
-
     # Implement Story and Canon companions (Dravroth (Herald), Mars (Knight), Eckbert (Scout), Doekel (Thaumaturge), Khoyat (Arcanist), Okebur (Quartermaster))
 
 # COMBAT & SKILLS
@@ -44,9 +41,15 @@
     # Use items in combat (DONE)
     # Escape combat (DONE)
     # create buff, debuff skills (DONE)
-
     # Enemy Generator? (DONE)
-    # Fix formulas (DONE) (Do AGAIN)
+    # Fix formulas (DONE) (DONE / PLAYTEST)
+
+    # Add auto/rush command
+    # Enemy loot/materials
+    # More advanced Equipment crafting/customization?
+        # Weapon/Armor upgrade tree?
+    # Quartermaster and Equipment management improvement
+    
 
 # CLASS SKILLS
     # KNIGHT
@@ -172,3 +175,18 @@
     revita 10 TP / 9 / 8 / 7 / 6 / 5
     revitamor 18 TP / 16 / 14 / 12 / 10 / 8
     revitamatha 30 TP / 27 / 24 / 21 / 18 / 15
+
+
+# Version 0.14
+    # Balance combat, phys and elemental damage
+    # Removal of "DMG" stat
+    # Map completion tracker
+
+    ! Add rush/auto combat command
+    ! Added music and sound effects
+    ! Added floors 2-5 of Forest Dungeon (along with traps)
+    ! Add bosses to Forest Dungeon
+    ! Add Quests
+    ! Add Area map with more dungeons + Travel time mechanic
+    ! Add Bestiary + Monster material mechanic
+    ? Add Revamped Equipment system + Crafting

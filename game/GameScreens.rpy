@@ -2250,6 +2250,7 @@ screen dungeon_playermap:
 
             text f"Dungeon Map" size 50 xalign 0.0 ypos 50
             text f"Floor: {dungeon_level}" size 30 ypos 180
+            text f"{mapcompletion}% mapped" size 30 ypos 230
 
 
 

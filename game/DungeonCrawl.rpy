@@ -4,15 +4,6 @@ init 5 python:
     import time
     import copy
 
-    class Tile:
-        def __init__(self,name,N,W,E,S,seen):
-            self.name = name
-            self.N = N
-            self.W = W
-            self.E = E
-            self.S = S
-            self.seen = seen
-
     C = "C" # Chest
     O = "O" # Open Chest
     U = "U" # Stairs Up
@@ -27,7 +18,7 @@ init 5 python:
     EO = "EO" # Secret Passage East only open
     R = "R" # Resting Area
     M = "M" # Merchant
-
+    """
     testdungeon = [
         [1,1,1,1,1,1,1,1,1,1],
         [1,0,0,0,0,2,0,0,0,1],
@@ -53,7 +44,7 @@ init 5 python:
     #    0  1 2 3 4 5  6 7 8 9 10 1 2 3 4 5  6 7 8 9 20 1 2 3 4 5  6 7 8 9 30 1
         [1, 0,1,1,0,1, 1,1,0,0,0, 1,0,0,0,0, 0,1,0,0,1, 0,1,0,1,9, 1,0,1,1,0, 1],
         [1, 0,0,1,0,0, 0,1,0,1,1, 1,1,2,1,1, 1,1,0,C,1, 0,1,1,1,0, 1,0,1,1,0, 1],
-        [1, 0,1,1,1,1, 0,1,0,1,1, 1,0,0,M,1, 1,1,1,1,1, 0,1,0,1,0, 1,0,W,0,0, 1],
+        [1, 0,1,1,1,1, 0,1,0,1,1, 1,0,0,M,1, 1,1,1,1,1, 0,1,0,1,0, 1,0,9,0,0, 1],
         [1, 0,0,0,0,1, 0,0,0,0,0, 2,0,0,0,2, 0,0,0,0,0, 0,1,0,0,0, 1,0,1,1,1, 1],
         [1, 1,1,1,0,1, 0,1,0,1,1, 1,0,0,0,1, 1,1,1,1,1, 1,1,0,1,0, 1,0,0,0,0, 1], #10
     #    0  1 2 3 4 5  6 7 8 9 10 1 2 3 4 5  6 7 8 9 20 1 2 3 4 5  6 7 8 9 30 1
@@ -126,7 +117,7 @@ init 5 python:
     dungeon_current_loot = None
     dungeon_current = dungeon11
     dungeon_current_loot = dungeon11loot
-
+    """
     party = party
     party_facing = 2
     danger = 0
@@ -147,9 +138,10 @@ init 5 python:
         party_coord[1] += x
         check = dungeon_blueprint[party_coord[0]][party_coord[1]]
         
-        update_time()    
+        update_time()
+        update_mapcompletion()    
         # update_laid()
-        if restAreaCheck() == False:
+        if not restAreaCheck():
             update_danger()
 
     # FIX
@@ -241,6 +233,17 @@ init 5 python:
             if hour >= 21 and hour <= 23:
                 hour_name = "Evening"
 
+    def update_mapcompletion():
+        global mapcompletion
+
+        tiles_maped = 0
+        # dungeon_playermap
+        for ny in range(len(dungeon_playermap)):
+            for nx in dungeon_playermap[ny]:
+                if nx != "":
+                    tiles_maped += 1
+
+        mapcompletion = round(tiles_maped * 100 / 1024, ndigits=2)
 
 
     time_day = True
@@ -480,19 +483,23 @@ init 5 python:
         # hour_names = ["Dawn","Morning","Noon","Afternoon","Twilight","Evening","Midnight","Witching Hour"]
 
     def restAreaCheck():
-        in_rest_area = any(area(*party_coord) for area in dungeon11_rest)
+        # in_rest_area = any(area(*party_coord) for area in dungeon11_rest)
+        global party_coord
 
-        if in_rest_area:
-            return True
-        else:
-            return False
+        for loc in dungeon11_rest:
+            if loc[0] <= party_coord[0] <= loc[1] and loc[2] <= party_coord[1] <= loc[3]:
+                return True
+            
+        return False
 
-    def dungeonMap():
-        global dungeon_blueprint
-        
-        # Call a Ren'py screen (viewport) with @dg_playermap, which contains all seen tiles from the BP dungeon.
+            # 8 <= party_coord[0] <= 10 and 12 <= party_coord[1] <= 14
 
-        pass
+        # in_rest_area = any(restarea)
+
+        # if in_rest_area:
+        #     return True
+        # else:
+        #     return False
 
 
     def openDoor():
@@ -879,17 +886,18 @@ init 5 python:
 
 
 
-## RENPY DEFAULTS
+#RENPY DEFAULTS 1
 
 default party_coord = [1,1]
-default dungeon_blueprint = dungeon11
-default check = dungeon_blueprint[party_coord[0]][party_coord[1]]
+
+
 
 # DUNGEON 11 Defaults
-
+default dungeon11_mapcompletion = 0
 default dungeon11loot = {
         "1,6": (item1, 1,6),
         "2,8": (item1 ,2,8),
+        "5,30": (item5, 5,30),
         "13,2": (item2 ,13,2),
         "26,4": (armor3 ,26,4),
         "15,9": (chr2 ,15,9),
@@ -949,9 +957,32 @@ default dungeon11 = [
 
         [1, 1,1,1,1,1, 1,1,1,1,1, 1,1,1,1,1, 1,1,1,1,1, 1,1,1,1,1, 1,1,1,1,1, 1]
     ]#   0  1 2 3 4 5  6 7 8 9 10 1 2 3 4 5  6 7 8 9 20 1 2 3 4 5  6 7 8 9 30 1
+# default dungeon11_rest = [
+#         lambda y, x: 8 <= y <= 10 and 12 <= x <= 14,
+#         lambda y, x: 17 <= y <= 19 and 18 <= x <= 20,
+#         lambda y, x: 1 <= y <= 3 and 1 <= x <= 3,
+#     ]
+# default dungeon11_rest = [
+#     8 <= party_coord[0] <= 10 and 12 <= party_coord[1] <= 14,
+#     17 <= party_coord[0] <= 19 and 18 <= party_coord[1] <= 20,
+#     1 <= party_coord[0] <= 3 and 1 <= party_coord[1] <= 3,
+# ]
+
+default dungeon11_rest =  [
+    [8,10, 12,14],
+    [17,19, 18,20],
+    [1,3, 1,3]
+]
+
 default dungeon_current = dungeon11
 default dungeon_current_loot = dungeon11loot
 default dungeon_playermap = genDGPlayerMap(dungeon11)
+default mapcompletion = dungeon11_mapcompletion
+
+## RENPY DEFAULTS
+
+default dungeon_blueprint = dungeon11
+default check = dungeon_blueprint[party_coord[0]][party_coord[1]]
 
 
 ###
