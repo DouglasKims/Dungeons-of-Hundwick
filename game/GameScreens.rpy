@@ -115,7 +115,7 @@ screen party:
             for n in party:
                 if n.char_class != "Decoy":
                     transform:
-                        
+
                         frame: #Char  Frame
                             ypadding 20
                             xpadding 20
@@ -2481,13 +2481,13 @@ screen dungeon_command:
         yfill True
         xsize 500
 
-        vbox:
+        fixed:
             xalign 0.5
             # spacing 20
             # null height 20
             frame: # Activity Log
                 xsize 500
-                ysize 650
+                ysize 600
                 viewport id "dglog" yadjustment yadj:
                     draggable True
                     mousewheel True
@@ -2502,9 +2502,10 @@ screen dungeon_command:
                 vbar value YScrollValue("dglog") xalign 1.0 xoffset 10
 
 
-            grid 3 2:
+            grid 3 3:
                 xalign 0.5
-                yalign 0.5
+                # yalign 0.5
+                ypos 610
                 spacing 10
 
                 imagebutton idle "buttonturnccwidle" hover "buttonturnccwhover"  action Function(turnLeft)
@@ -2520,9 +2521,11 @@ screen dungeon_command:
                 imagebutton idle "buttonhandidle" hover "buttonhandhover" action Function(interactKey)
                 imagebutton idle "buttonpartyidle" hover "buttonpartyhover" action Call("party_menu_scene")
 
+                imagebutton idle "buttonrecidle" hover "buttonrechover" action Function(autorecovery)
+
             fixed:
-                ypos -280
-                xpos -10
+                ypos 610
+                xpos -20
                 
                 
                 text "Q" size 30 xpos 50 outlines [(3, "#333", 2, 2)]
@@ -2531,6 +2534,7 @@ screen dungeon_command:
                 text "TAB" size 30 xpos 50 ypos 150 outlines [(3, "#333", 2, 2)]
                 text "F" size 30 xpos 200 ypos 150 outlines [(3, "#333", 2, 2)]
                 text "R" size 30 xpos 350 ypos 150 outlines [(3, "#333", 2, 2)]
+                text "Auto-recover" size 20 xpos 50 ypos 400 outlines [(3, "#333", 2, 2)]
 
             key "q" action Function(turnLeft)
             key "w" action Function(moveForwards)

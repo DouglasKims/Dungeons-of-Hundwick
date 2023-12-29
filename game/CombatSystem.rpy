@@ -370,14 +370,13 @@ init 3 python:
         global combat_money
         global party_money
 
-        aliveparty = 0
-        for n in party:
-            if n.hp >0:
-                aliveparty += 1
+        for n in party: # Revives dead-party members with 1hp after batle
+            if n.hp <=0:
+                n.hp = 1
 
         for n in party:
-            if n.hp >0:
-                n.exp += int(combat_exp)
+            # if n.hp >0:
+            n.exp += int(combat_exp)
         
         party_money += combat_money
 
@@ -495,8 +494,9 @@ init 3 python:
 
                 while enemytarget == None or enemytarget.hp == 0 or dioghtarget.hp == 0:
                     enemytarget = random.choice(party)
-                    logText (f"{enemy.name} seems fixated on {enemytarget.name}...")
                     dioghtarget = enemytarget
+                
+                logText (f"{enemy.name} seems fixated on {enemytarget.name}...")
             else:
                 enemytarget = dioghtarget
 
@@ -608,6 +608,27 @@ init 3 python:
             char.acted = True
             pass
 
+    def autobattle(): #COMPLETE
+        pass
+
+    def autorecovery():
+
+        logText("")
+        for char in party:
+            if char.hp < char.maxhp:
+                while char.hp < char.maxhp and char.tp > 0:
+                    char.tp -= 1
+                    char.hp += (15 + char.vit)
+
+                if char.hp > char.maxhp:
+                    char.hp = char.maxhp
+                logText (f"{char.name} has recovered.")
+            # elif char.hp == char.maxhp:
+            #     logText (f"{char.name} is already at full health.")
+            elif char.tp <= 0:
+                logText (f"{char.name} has no TP to use on recovery.")
+                
+    
 
     def skillCommand(char, spell, target):
         dmgtype = ""

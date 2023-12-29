@@ -181,3 +181,11 @@ image buttonturnccwhover:
     "Map/BtnTCW_selected.webp"
     zoom 0.7
     xzoom -1
+
+image buttonrecidle:
+    "Map/Btnrec_idle.png"
+    zoom 0.7
+
+image buttonrechover:
+    "Map/Btnrec_hover.png"
+    zoom 0.7

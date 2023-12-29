@@ -235,14 +235,15 @@ label combat_label:
     stop music
     play sound monster
 
-    show bg at blur with pixellate
-
-
     hide screen dungeon_danger
     hide screen dungeon_explore
+
+    show bg at blur with pixellate
+    # show bg at blur
+
     show screen initiative_screen
     show screen combat_log
-    show screen combat_screen with dissolve
+    show screen combat_screen
     
     pause 0.5
     play music battle2

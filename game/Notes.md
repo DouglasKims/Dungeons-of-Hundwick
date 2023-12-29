@@ -181,9 +181,12 @@
     # Balance combat, phys and elemental damage
     # Removal of "DMG" stat
     # Map completion tracker
+    #! Added music and sound effects
 
+    ! Dead characters return with 1HP AND get exp\
+    ! Add character Portraits to menus/combat
+    ! Add enemy pictures in combat
     ! Add rush/auto combat command
-    ! Added music and sound effects
     ! Added floors 2-5 of Forest Dungeon (along with traps)
     ! Add bosses to Forest Dungeon
     ! Add Quests
