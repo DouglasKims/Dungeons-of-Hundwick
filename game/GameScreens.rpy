@@ -114,40 +114,42 @@ screen party:
             spacing 20
             for n in party:
                 if n.char_class != "Decoy":
-                    frame: #Char 1
-                        ypadding 20
-                        xpadding 20
-                        xsize 300
-                        if charinit == n:
-                            background "#224"
+                    transform:
                         
-                        if n.hp <= 0:
-                            background "#822"
-                        vbox:
-                            ymaximum 150
-                            spacing 10
-                            text "[n.name]":
-                                outlines [(3, "#333", 2, 2)]
-                                size 30
-                            fixed:
-                                bar value AnimatedValue(value=n.hp, range=n.maxhp, delay=0.3) xsize 260 ysize 38
-                                text f"{int(n.hp)} / {int(n.maxhp)}" size 30 ypos -2 xalign 0.5 outlines [(2, "#333", 1, 1)]
-                            fixed:
-                                ypos -50
-                                bar value AnimatedValue(value=n.tp, range=n.maxtp, delay=0.3) xsize 260 left_bar "#ff0" right_bar "#440" ysize 38
-                                text f"{int(n.tp)} / {int(n.maxtp)}" size 30 ypos -2 xalign 0.5 outlines [(2, "#333", 1, 1)]
-                            fixed:
-                                hbox:
-                                    spacing -5
-                                    for effect in n.effects:
-                                        transform:
-                                            rotate -30
-                                            xanchor 0.5 yanchor 0.5
-                                            text effect.title() + f" {n.effects[effect][1]}":
-                                                size 20 outlines [(2, "#333", 1, 1)]
+                        frame: #Char  Frame
+                            ypadding 20
+                            xpadding 20
+                            xsize 300
+                            if charinit == n:
+                                background "#224"
+                            
+                            if n.hp <= 0:
+                                background "#822"
+                            vbox:
+                                ymaximum 150
+                                spacing 10
+                                text "[n.name]":
+                                    outlines [(3, "#333", 2, 2)]
+                                    size 30
+                                fixed:
+                                    bar value AnimatedValue(value=n.hp, range=n.maxhp, delay=0.3) xsize 260 ysize 38
+                                    text f"{int(n.hp)} / {int(n.maxhp)}" size 30 ypos -2 xalign 0.5 outlines [(2, "#333", 1, 1)]
+                                fixed:
+                                    ypos -50
+                                    bar value AnimatedValue(value=n.tp, range=n.maxtp, delay=0.3) xsize 260 left_bar "#ff0" right_bar "#440" ysize 38
+                                    text f"{int(n.tp)} / {int(n.maxtp)}" size 30 ypos -2 xalign 0.5 outlines [(2, "#333", 1, 1)]
+                                fixed:
+                                    hbox:
+                                        spacing -5
+                                        for effect in n.effects:
+                                            transform:
+                                                rotate -30
+                                                xanchor 0.5 yanchor 0.5
+                                                text effect.title() + f" {n.effects[effect][1]}":
+                                                    size 20 outlines [(2, "#333", 1, 1)]
 
 
-        hbox:
+        hbox: # Decoy screen
             xalign 0.5
             ypos -100
             spacing 20
@@ -2221,6 +2223,7 @@ screen dungeon_playermap:
     zorder +2
 
     python:
+        # renpy.play(audio.map)
         if party_facing is not None: # Print Party Facing to middle of @localmap
             if party_facing == 8:
                 dungeon_playermap[party_coord[0]][party_coord[1]] = "▲"

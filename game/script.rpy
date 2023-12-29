@@ -7,6 +7,17 @@ label start:
     
     return
 
+label return_town_label:
+
+    stop music
+    play sound step2
+    queue sound step2
+    queue sound step2
+    scene black with Pixellate(2, 6)
+
+    # pause 0.3
+    jump town_scene
+
 label town_scene:
     $ party_screen_shown = False
     $ logtext = []
@@ -14,8 +25,10 @@ label town_scene:
 
     if hour >= 18 or hour <=5:
         scene bg Town at scenerydark with dissolve
+        play music citynight if_changed
     else:
         scene bg Town at scenery with dissolve
+        play music city if_changed
     
 
     label .screen:
@@ -50,6 +63,7 @@ label shop_scene:
     $ shop_command = None
     $ shop_type = None
     scene bg Shop at scenery with dissolve
+    play music shop
 
     label .screen:
     call screen shop with dissolve
@@ -163,8 +177,9 @@ label manage_equip_slot_label:
 
 label dgplayermap_label:
 
+    play sound map
     call screen dungeon_playermap
-
+    play sound mapclose
     return
 
 label dungeon_label:
@@ -174,13 +189,25 @@ label dungeon_label:
     $ exploring = True
     $ danger = 0
 
+    stop music
+    play sound step2
+    queue sound step2
+    queue sound step2
+    scene black with Pixellate(2, 6)
+
+    # pause 0.5
+
+
+
     if hour >= 18 or hour <=5:
         scene bg Dungeon at scenerydark with dissolve
     else:
         scene bg Dungeon at scenery with dissolve
 
+    play music forest
 
     label .screen:
+    play music forest if_changed
     show screen dungeon_danger
     show screen dungeon_explore
     $ getMap()
@@ -192,6 +219,9 @@ default charinit = None
 default in_combat = False
 label combat_label:
 
+    # scene black with pixellate
+    # pause 0.5
+
     # scene transition for battle
     $ battlecommand = None
     $ charinit = None
@@ -202,13 +232,20 @@ label combat_label:
     $ selected_character = None
     $ selected_skill = None
 
-    show bg at blur
+    stop music
+    play sound monster
+
+    show bg at blur with pixellate
+
 
     hide screen dungeon_danger
     hide screen dungeon_explore
     show screen initiative_screen
     show screen combat_log
-    show screen combat_screen
+    show screen combat_screen with dissolve
+    
+    pause 0.5
+    play music battle2
     # call screen combat_command
 
     $ logText("\nEnemies have appeared!")
@@ -233,6 +270,9 @@ label combat_label:
                             tickEffect(n)
 
                     enemyTurn(n)
+
+                    applyDamage(n)
+
                     renpy.pause(1.0)
 
                     if gameover(party):
@@ -266,6 +306,10 @@ label combat_label:
                                     logText(f"{effect.upper()}: turns left: {n.effects[effect][1]}")
 
                             renpy.call_screen("combat_command")
+                            # Deal Damage goes here.
+
+                            applyDamage(n)
+
                             renpy.pause(0.5)
 
                 # endofturncleanup()
@@ -283,6 +327,9 @@ label combat_label:
     hide screen combat_screen
     $ charinit = None
 
+
+    stop music
+
     if hour >= 18 or hour <=5:
         show bg at unblurdark
     else:
@@ -299,7 +346,7 @@ label combresults:
 
     $ resultstext = ""
     # $ calcRewards()
-    $ resultstext = f"You won the combat in {rounds} rounds!\nThe party gains {combat_money} Cr and each living party member receives {int(combat_exp)} experience."
+    $ resultstext = f"Rewards: {combat_money} Cr. and {int(combat_exp)} EXP."
 
     call screen combat_results with dissolve
     # call screen combat_results with dissolve
@@ -326,6 +373,7 @@ label levelup_label:
 
 label gameover_label:
 
+    stop music
     "The whole party has perished."
 
     hide screen initiative_screen
@@ -336,7 +384,6 @@ label gameover_label:
     "Game Over."
 
     scene black with dissolve
-    $ renpy.block_rollback()
     call screen main_menu with dissolve
 
 

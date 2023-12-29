@@ -517,7 +517,8 @@ init 5 python:
         door = dungeon_blueprint[doorcoord[0]][doorcoord[1]]
         
         if door == 2:
-            logText("You open the door and go through it.")
+            renpy.play(audio.door)
+            # logText("You open the door and go through it.")
             if party_facing == 8:
                 update_coord(0,-2)
             elif party_facing == 4:
@@ -528,7 +529,7 @@ init 5 python:
                 update_coord(+2,0)
         
         elif door == 8 or door == 6:
-            logText("You go through the passageway.")
+            # logText("You go through the passageway.")
             if party_facing == 8:
                 update_coord(0,-2)
             elif party_facing == 4:
@@ -654,7 +655,7 @@ init 5 python:
                 danger = 0
                 renpy.hide_screen("dungeon_danger")
                 renpy.hide_screen("dungeon_explore")
-                renpy.jump("town_scene")
+                renpy.jump("return_town_label")
                 
             else:
                 dungeon_level -= 1
@@ -679,6 +680,7 @@ init 5 python:
         lootcoord = f"{looty},{lootx}"
         
         if lootcoord in dungeon_current_loot:
+            renpy.play(audio.chest)
             lootitem = dungeon_current_loot[lootcoord][0]
 
             if lootitem.type == "Weapon" or lootitem.type == "Armor" or lootitem.type == "Accessory" or lootitem.type == "Charm":
@@ -849,6 +851,7 @@ init 5 python:
 
             if tileface == 0:
                 update_coord(dx,dy)
+                renpy.play(audio.step)
             # elif tileface in [f"{RED}▲{RESET}",f"{RED}▼{RESET}",f"{RED}◄{RESET}",f"{RED}►{RESET}"]:
             #     logText("You walk into a Làidir!")
             #     bossbattle = True

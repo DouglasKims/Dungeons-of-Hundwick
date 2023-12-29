@@ -40,7 +40,7 @@ init 3 python:
         d100 = random.randint(1,100)
 
         if d100 >= 90 * abs((math.sqrt(int(char.lck))/100)-(math.sqrt(int(char.agi))/100)+1):
-            logText(f"Miss!")
+            logText(f"{char.name} misses the attack!")
             atkmod = 0
             miss = True
 
@@ -88,6 +88,7 @@ init 3 python:
 
     def attackfunc(attacker,target):
         global opptoremove
+        global damage_toapply
         # global atk_report
         # atk_report = ""
         rollattack(attacker,target)
@@ -108,40 +109,44 @@ init 3 python:
 
         if miss == True:
             finaldamage = 0
+            renpy.play(audio.miss)
 
         if finaldamage > 0:
-            if "phys" in target.weak:
-                finaldamage = round(finaldamage * 1.5)
-                logText (f"{attacker.name} attacks {target.name}, who's weak to Physical attacks for {finaldamage} damage!")
+            # if "phys" in target.weak:
+            #     finaldamage = round(finaldamage * 1.5)
+            #     logText (f"{attacker.name} attacks {target.name}, who's weak to Physical attacks for {finaldamage} damage!")
 
-            elif "phys" in target.resist:
-                finaldamage = int(finaldamage * 0.5)
-                logText (f"{attacker.name} attacks {target.name}, who's resistant to Physical attacks for {finaldamage} damage!")
+            # elif "phys" in target.resist:
+            #     finaldamage = int(finaldamage * 0.5)
+            #     logText (f"{attacker.name} attacks {target.name}, who's resistant to Physical attacks for {finaldamage} damage!")
 
-            elif target.defending == True:
-                finaldamage = finaldamage // 2
-                logText (f"{attacker.name} attacks {target.name}, but they defended and suffered only {finaldamage} damage.")
+            # elif target.defending == True:
+            #     finaldamage = finaldamage // 2
+            #     logText (f"{attacker.name} attacks {target.name}, but they defended and suffered only {finaldamage} damage.")
 
-            else:
-                logText (f"{attacker.name} attacks {target.name} for {finaldamage} damage.")
+            # else:
+            #     logText (f"{attacker.name} attacks {target.name} for {finaldamage} damage.")
 
-            if "protect" in target.effects:
-                finaldamage = int (finaldamage * ( 1 - target.effects["protect"][0] * 0.05 ) )
-                logText (f"But! {target.name} was protected and suffered only {finaldamage} damage.")
+            # if "protect" in target.effects:
+            #     finaldamage = int (finaldamage * ( 1 - target.effects["protect"][0] * 0.05 ) )
+            #     logText (f"But! {target.name} was protected and suffered only {finaldamage} damage.")
 
-            target.hp -= finaldamage
-            if target.hp <= 0 and target in party:
-                logText (f"{target.name} has been downed!")
-                target.hp = 0
+            # target.hp -= finaldamage # CAUSE DAMAGE
+            # Cause damage
+            damage_toapply.append([target, finaldamage, "phys"])
+
+            # if target.hp <= 0 and target in party:
+            #     logText (f"{target.name} has been downed!")
+            #     target.hp = 0
         
 
         elif finaldamage <= 0:
             logText (f"{attacker.name} attacks {target.name}, but causes no damage.")
 
-        if target.hp <= 0 and target in opposition:
-            opposition.remove(target)
-            opptoremove.append(target)
-            logText (f"{attacker.name} defeated {target.name}!")
+        # if target.hp <= 0 and target in opposition:
+        #     opposition.remove(target)
+        #     opptoremove.append(target)
+        #     logText (f"{attacker.name} defeated {target.name}!")
 
 
         # end of function
@@ -224,37 +229,37 @@ init 3 python:
 
         if spelltype == "single":
             dealspelldamage(char,starget,dmgtype,spelldamage)
-            if starget.hp <= 0:
-                if starget in opposition:
-                    opposition.remove(starget)
-                    opptoremove.append(starget)
-                    logText (f"{char.name} defeated {starget.name}!")
+            # if starget.hp <= 0:
+            #     if starget in opposition:
+            #         opposition.remove(starget)
+            #         opptoremove.append(starget)
+            #         logText (f"{char.name} defeated {starget.name}!")
 
 
         elif spelltype == "multi":
             if char in party:
                 for n in opposition:
                     dealspelldamage(char,n,dmgtype,spelldamage)
-                    if n.hp <= 0:
-                        defeatedopp.append(n)
+                    # if n.hp <= 0:
+                    #     defeatedopp.append(n)
             elif char in opposition:
                 for n in party:
                     dealspelldamage(char,n,dmgtype,spelldamage)
-                    if n.hp <= 0:
-                        defeatedparty.append(n)
+                    # if n.hp <= 0:
+                    #     defeatedparty.append(n)
             
-            for n in defeatedopp:
-                logText (f"{char.name} defeated {n.name}!")
-                opposition.remove(n)
-                opptoremove.append(n)
-                pass
-            for n in defeatedparty:
-                logText (f"{char.name} defeated {n.name}!")
-                pass
+            # for n in defeatedopp:
+            #     logText (f"{char.name} defeated {n.name}!")
+            #     opposition.remove(n)
+            #     opptoremove.append(n)
+            #     pass
+            # for n in defeatedparty:
+            #     logText (f"{char.name} defeated {n.name}!")
+            #     pass
 
-        if starget in party:
-            if starget.hp <= 0:
-                starget.hp = 0
+        # if starget in party:
+        #     if starget.hp <= 0:
+        #         starget.hp = 0
         
         if char in party:
             char.acted = True
@@ -277,6 +282,7 @@ init 3 python:
             logText (f"{starget.name} managed to avoid the attack!")
 
         else:
+            """
             if dmgtype in starget.weak:
                 spelldamage = int (spelldamage * 1.5)
                 logText (f"{starget.name} is weak to {dmgtype} and suffered {spelldamage} {dmgtype} damage!")
@@ -299,12 +305,17 @@ init 3 python:
             if "coating" in starget.effects:
                 if dmgtype in ("fire","wind","earth","ice","thunder","toxic","decay","chaos"):
                     spelldamage = int (spelldamage - ( spelldamage * math.sqrt(starget.effects["protect"][0])/10) )
-                    logText (f"But! {starget.name} was coated and suffered only {spelldamage} {dmgtype} damage.")
+                    logText (f"But! {starget.name} was coated and suffered only {spelldamage} {dmgtype} damage.")"""
 
-            starget.hp -= spelldamage
+            # Spell used
+            renpy.play(audio.spell)
 
-        if starget in party and starget.hp <= 0:
-            starget.hp = 0
+            # Cause damage
+            damage_toapply.append([starget, spelldamage, dmgtype])
+            # starget.hp -= spelldamage
+
+        # if starget in party and starget.hp <= 0:
+        #     starget.hp = 0
 
     def gameover(party):
         global isgameover
@@ -331,9 +342,9 @@ init 3 python:
         plevel = partyLevel()
 
         if "Làidir" in enemy.name:
-            combat_exp += round(round(40*enemy.level/plevel) * 10) * enemy.exp
+            combat_exp += round(round(40*enemy.level/plevel) * 10) * enemy.exp * ( 1 + mapcompletion /100)
         else:
-            combat_exp += round(40*enemy.level/plevel) * enemy.exp
+            combat_exp += round(40*enemy.level/plevel) * enemy.exp * ( 1 + mapcompletion /100)
 
     def endofturncleanup():
         global initiative
@@ -513,7 +524,23 @@ init 3 python:
             elemweight = 0
         
 
-        choice = random.choices(enemychoices, weights=[physweight,elemweight,elemweight/3], k=1)[0]
+        # Play enemy Sound
+        if enemy.name != None:
+            if "Adbah" in enemy.name:
+                renpy.play(audio.m_adhbah)
+            if "Grain" in enemy.name:
+                renpy.play(audio.m_grain)
+            if "Colt" in enemy.name:
+                renpy.play(audio.m_colt)
+            if "Diogh" in enemy.name:
+                renpy.play(audio.m_diogh)
+            if "Malla" in enemy.name:
+                renpy.play(audio.m_malla)
+            if "Sgeu" in enemy.name:
+                renpy.play(audio.m_sgeu)
+
+
+        choice = random.choices(enemychoices, weights=[physweight,elemweight,elemweight/4], k=1)[0]
 
         if choice == "phys":
             attackfunc(enemy,enemytarget)
@@ -749,6 +776,10 @@ init 3 python:
                             char.acted = True
     
     def skillCommandPhys(char, charcommand, target):
+        global dealdamage_attacker
+        global dealdamage_skill
+        global dealdamage_target
+
 
         if "charge" in charcommand:
             if char.hp > round(char.maxhp*0.15):
@@ -771,17 +802,34 @@ init 3 python:
             # if char.hp > round(char.maxhp*0.20) and usetp(char,char.slist[charcommand][2]) == True:
             if usetp(char,char.slist[charcommand][2]) == True:
                 
-                atkmin = math.ceil(char.slist["cleave"][0]/2)
-                atkmax = math.floor(char.slist["cleave"][0]/2) + 3
+                # atkmin = math.ceil(char.slist["cleave"][0]/2)
+                # atkmax = math.floor(char.slist["cleave"][0]/2) + 3
+
+                atkmin = 3
+                atkmax = 3
                 attacktimes = random.randint(atkmin, atkmax)
                 # char.hp -= round(char.maxhp*0.20) # No more HP cost
                 # char.tp -= 3
+
 
                 for _ in range(attacktimes):
                     if opposition:
                         # target = random.choice(opposition)
                         # attackfunc(char,target)
-                        target = random.choice(opposition)
+                        
+                        target = None
+                        while target == None:
+                            target = random.choice(opposition)
+                            totaldmg = 0
+                            if damage_toapply:
+                                for item in damage_toapply:
+                                    if item[0] == target:
+                                        totaldmg += item[1]
+
+                                if totaldmg >= item[0].hp:
+                                    target = None
+
+
                         attackfunc(char,target)
                         # renpy.pause(1.5)
 
@@ -885,12 +933,14 @@ init 3 python:
             
             if "grun" in charcommand:
                 if usetp(char,char.slist[charcommand][2]) == True:
+                    renpy.play(audio.spellbuff)
                     for n in party:
                         applyEffect(char, charcommand, n)
                     char.acted = True
             
             else: # Single Ally
                 if usetp(char,char.slist[charcommand][2]) == True:
+                    renpy.play(audio.spellbuff)
                     applyEffect(char, charcommand, target)
                     char.acted = True
 
@@ -923,6 +973,85 @@ init 3 python:
                 logText(f"{char.name} has appraised {target.name}'s potential.")
                 char.acted = True
 
+    def applyDamage(char):
+        global damage_toapply
+        global opposition
+        global opptoremove
+        global defeatedopp
+        global defeatedparty
+        defeatedopp = []
+        defeatedparty = []
+
+
+        for item in damage_toapply:
+
+            if item[0].hp > 0:
+                # Modify damage based on EFFECTS
+                if item[2] in item[0].weak:
+                    item[1] = int (item[1] * 1.5)
+                    logText (f"{char.name} caused {item[1]} {item[2]} (WEAK: 1.5x) damage to {item[0].name}.")
+
+                elif item[0].defending == True:
+                    item[1] = item[1] // 2
+                    # logText (f"{starget.name} was defending and suffered only {spelldamage} {dmgtype} damage.")
+                    logText (f"{char.name} caused {item[1]} {item[2]} (Defend: 0.5x) damage to {item[0].name}.")
+
+                elif item[2] in item[0].resist:
+                    item[1] = int(item[1] * 0.7)
+                    # logText (f"{starget.name} is resistant to {dmgtype} and suffers only {spelldamage} {dmgtype} damage.")
+                    logText (f"{char.name} caused {item[1]} {item[2]} (Resist: 0.7x) damage to {item[0].name}.")
+
+                else:
+                    logText (f"{char.name} caused {item[1]} {item[2]} damage to {item[0].name}.")
+
+                if "protect" in item[0].effects:
+                    item[1] = int (item[1] * ( 1 - item[0].effects["protect"][0] * 0.05 ) )
+                    # logText (f"But! {starget.name} was protected and suffered only {spelldamage} {dmgtype} damage.")
+                    logText (f"{char.name} caused {item[1]} {item[2]} (Protect: {( 1 - item[0].effects['protect'][0] * 0.05 )}x) damage to {item[0].name}.")
+
+                if "coating" in item[0].effects:
+                    if item[2] in ("fire","wind","earth","ice","thunder","toxic","decay","chaos"):
+                        item[1] = int (item[1] * ( 1 - item[0].effects['coating'][0] * 0.05 ) )
+                        # logText (f"But! {starget.name} was coated and suffered only {spelldamage} {dmgtype} damage.")
+                        logText (f"{char.name} caused {item[1]} {item[2]} (Coated: {( 1 - item[0].effects['coating'][0] * 0.05 )}x) damage to {item[0].name}.")
+
+
+            # Apply damage normally
+            if item[0].hp > 0:
+                item[0].hp -= item[1]
+
+            renpy.play(audio.blow)
+
+            # logText (f"{char.name} caused {item[1]} {item[2]} damage to {item[0].name}.")
+
+            # if defeated, append to corresponding list
+            if item[0].hp <= 0 and item[0] in opposition:
+                defeatedopp.append(item[0])
+
+            if item[0].hp <= 0 and item[0] in party:
+                defeatedparty.append(item[0])
+                item[0].hp = 0
+            
+            renpy.pause(0.5)
+
+
+        
+        # Log all defeated combatants
+        for n in defeatedopp:
+            logText (f"{char.name} defeated {n.name}!")
+            
+            # Enemy dying Animation here:
+            # enemytodie = renpy.get_displayable("combat_screen", n.name)
+            renpy.pause(0.5)
+
+            opposition.remove(n)
+            opptoremove.append(n)
+
+        for n in defeatedparty:
+            logText (f"{char.name} defeated {n.name}!")
+
+
+        damage_toapply = []
 
 # RENPY LABELS
 
@@ -931,4 +1060,5 @@ init 3 python:
 # RENPY DEFAULTS
 
 default opposition = []
+default damage_toapply = []
 ##

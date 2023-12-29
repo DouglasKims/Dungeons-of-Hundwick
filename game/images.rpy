@@ -21,6 +21,9 @@ transform unblurdark:
     blur 5.0
     easein 2.0 blur 0.0 matrixcolor TintMatrix("#334477")
 
+transform enemydie:
+    easein 1.0 blur 5.0 alpha 0.0
+
 image bg Town:
     "BG/Hundwick.webp"
     zoom 1.20

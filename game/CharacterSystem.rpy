@@ -296,7 +296,7 @@ init 2 python:
 
 # RENPY FUNCITONS
 
-    exptolevel = 600 # EXP TO LEVEL UP
+    exptolevel = 1000 # EXP TO LEVEL UP
     def checkLevel(char):
 
         while char.exp >= char.level * exptolevel: # *1.5
