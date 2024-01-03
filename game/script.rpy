@@ -231,6 +231,7 @@ label combat_label:
     $ selected_item = None
     $ selected_character = None
     $ selected_skill = None
+    $ autobattle = False
 
     stop music
     play sound monster
@@ -274,7 +275,8 @@ label combat_label:
 
                     applyDamage(n)
 
-                    renpy.pause(1.0)
+                    if not autobattle:
+                        renpy.pause(1.0)
 
                     if gameover(party):
                         renpy.pause(1.0)
@@ -306,12 +308,26 @@ label combat_label:
                                 for effect in effect_keys:
                                     logText(f"{effect.upper()}: turns left: {n.effects[effect][1]}")
 
-                            renpy.call_screen("combat_command")
+
+                            if autobattle and opposition:
+                                pc_target = random.choice(opposition)
+                                attackfunc(n, pc_target)
+                                applyDamage(n)
+                                n.acted = True
+                            else:
+                                renpy.call_screen("combat_command")
+
+                                if autobattle and opposition:
+                                    pc_target = random.choice(opposition)
+                                    attackfunc(n, pc_target)
+                                    applyDamage(n)
+                                    n.acted = True
+                                
+                                else:
+                                    applyDamage(n)
+                                    renpy.pause(0.5)
+                                
                             # Deal Damage goes here.
-
-                            applyDamage(n)
-
-                            renpy.pause(0.5)
 
                 # endofturncleanup()
 

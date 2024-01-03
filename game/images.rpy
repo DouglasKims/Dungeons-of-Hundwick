@@ -189,3 +189,11 @@ image buttonrecidle:
 image buttonrechover:
     "Map/Btnrec_hover.png"
     zoom 0.7
+
+image buttonffhover:
+    "Map/BtnFF_hover.png"
+    zoom 0.4
+
+image buttonffidle:
+    "Map/BtnFF_idle.png"
+    zoom 0.4

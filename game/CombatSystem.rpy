@@ -608,8 +608,13 @@ init 3 python:
             char.acted = True
             pass
 
-    def autobattle(): #COMPLETE
-        pass
+    # def autoBattle(): #COMPLETE
+    #     global autobattle
+
+    #     while autobattle and opposition:
+
+
+    #     pass
 
     def autorecovery():
 
@@ -627,8 +632,7 @@ init 3 python:
             #     logText (f"{char.name} is already at full health.")
             elif char.tp <= 0:
                 logText (f"{char.name} has no TP to use on recovery.")
-                
-    
+
 
     def skillCommand(char, spell, target):
         dmgtype = ""
@@ -1080,6 +1084,7 @@ init 3 python:
 
 # RENPY DEFAULTS
 
+default autobattle = False
 default opposition = []
 default damage_toapply = []
 ##

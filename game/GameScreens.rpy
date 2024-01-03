@@ -193,11 +193,11 @@ screen time:
             text hour_name:
                 size 40
                 if hour >= 3 and hour <= 5:
-                    color "#000" outlines [(4, "#0C0", 2, 2)]
+                    color "#000" outlines [(4, "#0C0", 2, 2)] bold True
                 elif hour >= 18 or hour <= 2:
-                    color "#00F" outlines [(4, "#FFF", 2, 2)]
+                    color "#00F" outlines [(4, "#FFF", 2, 2)] bold True
                 else:
-                    color "#FFF" outlines [(4, "#333", 2, 2)]
+                    color "#FFF" outlines [(4, "#333", 2, 2)] bold True
 
 screen town:
     zorder 1
@@ -2556,6 +2556,15 @@ screen initiative_screen:
         ypadding 25
         # background None
 
+        fixed:
+            xpos 10
+            ypos 80
+
+            if autobattle == False:
+                imagebutton idle "buttonffidle" hover "buttonffhover" action SetVariable("autobattle", True)
+            if autobattle == True:
+                imagebutton idle "buttonffhover" hover "buttonffidle" action SetVariable("autobattle", False)
+
         vbox:
             xsize 950
             text "INITIATIVE:" size 30
@@ -2580,6 +2589,8 @@ screen combat_screen:
         ysize 780
         xalign 1.0
         background None
+
+
 
         hbox:
             yalign 0.7
@@ -2866,6 +2877,9 @@ screen combat_command: # Command for @charinit
 
     if charinit.acted == True:
         timer 0.001 action SetVariable("selected_skill", None), Return()
+
+    if autobattle == True:
+        timer 0.001 action Return()
         
 
 screen combat_results:

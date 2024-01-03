@@ -182,11 +182,11 @@
     # Removal of "DMG" stat
     # Map completion tracker
     #! Added music and sound effects
+    # Added rush/auto combat command
+    # Dead characters return with 1HP AND get exp from battles (Design thoughts on this?)
 
-    ! Dead characters return with 1HP AND get exp\
     ! Add character Portraits to menus/combat
     ! Add enemy pictures in combat
-    ! Add rush/auto combat command
     ! Added floors 2-5 of Forest Dungeon (along with traps)
     ! Add bosses to Forest Dungeon
     ! Add Quests

@@ -504,36 +504,36 @@ init 2 python:
                     if char.char_class == arcanist or char.char_class.name == "Arcanist":
                         if char.slist[skill][0] >= 2:
                             char.slist[f"grun{skill.lower()}"] = global_skill_list[f"grun{skill}"].copy()
-                            char.slist[f"grun{skill.lower()}"][0] = skill_level-1
+                            char.slist[f"grun{skill.lower()}"][0] = char.slist[skill][0]-1
                         if char.slist[skill][0] >= 3:
                             char.slist[f"{skill.lower()}mor"] = global_skill_list[f"{skill}mor"].copy()
-                            char.slist[f"{skill.lower()}mor"][0] = skill_level
+                            char.slist[f"{skill.lower()}mor"][0] = char.slist[skill][0]
                         if char.slist[skill][0] >= 4:
                             char.slist[f"grun{skill.lower()}mor"] = global_skill_list[f"grun{skill}mor"].copy()
-                            char.slist[f"grun{skill.lower()}mor"][0] = skill_level-1
+                            char.slist[f"grun{skill.lower()}mor"][0] = char.slist[skill][0]-1
                         if char.slist[skill][0] >= 5:
                             char.slist[f"{skill.lower()}matha"] = global_skill_list[f"{skill}matha"].copy()
-                            char.slist[f"{skill.lower()}matha"][0] = skill_level
+                            char.slist[f"{skill.lower()}matha"][0] = char.slist[skill][0]
                         if char.slist[skill][0] >= 6:
                             char.slist[f"grun{skill.lower()}matha"] = global_skill_list[f"grun{skill}matha"].copy()
-                            char.slist[f"grun{skill.lower()}matha"][0] = skill_level-2
+                            char.slist[f"grun{skill.lower()}matha"][0] = char.slist[skill][0]-2
 
                     if char.char_class == herald or char.char_class == thaumaturge or char.char_class.name == "Herald" or char.char_class.name == "Thaumaturge":
                         if char.slist[skill][0] >= 3:
                             char.slist[f"grunfiro"] = global_skill_list[f"grunfiro"].copy()
-                            char.slist[f"grun{skill.lower()}"][0] = skill_level-2
+                            char.slist[f"grun{skill.lower()}"][0] = char.slist[skill][0]-2
                         if char.slist[skill][0] >= 4:
                             char.slist[f"{skill.lower()}mor"] = global_skill_list[f"{skill}mor"].copy()
-                            char.slist[f"{skill.lower()}mor"][0] = skill_level
+                            char.slist[f"{skill.lower()}mor"][0] = char.slist[skill][0]
                         if char.slist[skill][0] >= 6:
                             char.slist[f"grun{skill.lower()}mor"] = global_skill_list[f"grun{skill}mor"].copy()
-                            char.slist[f"grun{skill.lower()}mor"][0] = skill_level-2
+                            char.slist[f"grun{skill.lower()}mor"][0] = char.slist[skill][0]-2
                         if char.slist[skill][0] >= 7:
                             char.slist[f"{skill.lower()}matha"] = global_skill_list[f"{skill}matha"].copy()
-                            char.slist[f"{skill.lower()}matha"][0] = skill_level
+                            char.slist[f"{skill.lower()}matha"][0] = char.slist[skill][0]
                         if char.slist[skill][0] >= 9:
                             char.slist[f"grun{skill.lower()}matha"] = global_skill_list[f"grun{skill}matha"].copy()
-                            char.slist[f"grun{skill.lower()}matha"][0] = skill_level-2
+                            char.slist[f"grun{skill.lower()}matha"][0] = char.slist[skill][0]-2
                     pass
 
 

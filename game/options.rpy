@@ -24,7 +24,7 @@ define gui.show_name = True
 ## The version of the game.
 
 define config.version = "0.14_Combat_Update"
-# define config.version = "0.13.1_Map_update"
+# define config.version = "0.13.2_Map_update"
 
 
 ## Text that is placed on the game's about screen. Place the text between the
