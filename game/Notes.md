@@ -185,6 +185,15 @@
     # Added rush/auto combat command
     # Dead characters return with 1HP AND get exp from battles (Design thoughts on this?)
 
+
+    ! Make combat more interesting/engaging;
+        # Characters starts with only 2 out of 6 skills and 2 skills slots. They gain more by leveling.
+        # Combat level should be an average between all characters, to avoid underleveled characters falling back.
+        # Leader (Rem) is never is combat, but has COMMANDS they can use to improve party battle effectiveness.
+        # Rem's commands use Command charges which recharges when party exploits weaknesses and land crits.
+        # Party composition is 3 characters + Rem's commands.
+        # Rem never takes place in battles.
+
     ! Add character Portraits to menus/combat
     ! Add enemy pictures in combat
     ! Added floors 2-5 of Forest Dungeon (along with traps)
@@ -193,3 +202,5 @@
     ! Add Area map with more dungeons + Travel time mechanic
     ! Add Bestiary + Monster material mechanic
     ? Add Revamped Equipment system + Crafting
+
+    ! Random Dungeons?
